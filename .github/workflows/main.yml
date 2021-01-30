@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: pip install tox
       - name: Start all services
-        run: make up
+        run: make up logs
       - name: Stop all services and Delete containers
         run: make stop down
       - name: Delete all images
