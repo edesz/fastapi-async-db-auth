@@ -1,0 +1,12 @@
+sqlalchemy
+sqlalchemy-utils
+databases
+python-multipart
+bcrypt
+passlib
+tortoise-orm
+pyjwt
+fastapi
+uvicorn[standard]
+gunicorn
+pandas

@@ -1,0 +1,27 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+    env:
+      AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+      AZURE_STORAGE_KEY: ${{ secrets.AZURE_STORAGE_KEY }}
+      ENDPOINT_SUFFIX: ${{ secrets.ENDPOINT_SUFFIX }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+        with:
+          python-version: '3.8'
+          architecture: 'x64'
+      - name: Upgrade python-pip
+        run: python -m pip install --upgrade pip
+      - name: Install dependencies
+        run: pip install tox
+      - name: Start all services
+        run: make up
+      - name: Stop all services and Delete containers
+        run: make stop down
+      - name: Delete all images
+        run: make delete-api-image

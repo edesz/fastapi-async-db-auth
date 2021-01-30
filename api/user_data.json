@@ -1,0 +1,22 @@
+[
+  {
+    "username": "anthony",
+    "password_hash": "mysecret"
+  },
+  {
+    "username": "tom",
+    "password_hash": "mysecondsecret"
+  },
+  {
+    "username": "john",
+    "password_hash": "mythirdsecret"
+  },
+  {
+    "username": "tim",
+    "password_hash": "myfourthsecret"
+  },
+  {
+    "username": "jane",
+    "password_hash": "myfifthsecret"
+  }
+]
