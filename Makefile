@@ -2,16 +2,31 @@
 .EXPORT_ALL_VARIABLES:
 HOST=0.0.0.0
 API_PORT=8050
+HOSTNAME=localhost
+POSTGRES_PORT=5432
+POSTGRES_DB=test_db
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
 
 ## Run API
 api:
 	tox -e api
 .PHONY: api
 
+## Create Database
+create-db:
+	tox -e manage-db -- 'CREATE'
+.PHONY: create-db
+
 ## Verify
 verify:
 	tox -e verify
 .PHONY: verify
+
+## Delete Database
+delete-db:
+	tox -e manage-db -- 'DROP'
+.PHONY: delete-db
 
 ## Start API service
 up:

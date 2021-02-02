@@ -3,7 +3,7 @@
 
 
 import pandas as pd
-from pydantic import BaseModel, HttpUrl, constr, validator
+from pydantic import BaseModel, Field, HttpUrl, SecretStr, constr, validator
 
 
 class NewsArticle(BaseModel):
@@ -28,13 +28,32 @@ class NewsArticle(BaseModel):
         use_enum_values = True
 
 
+class DBUser(BaseModel):
+    username: str
+    # password_hash: SecretStr = Field(strip_whitespace=True, min_length=5)
+    password_hash: constr(strip_whitespace=True, min_length=5)
+
+    class Config:
+        use_enum_values = True
+
+
+class DBUserRecord(BaseModel):
+    id: int
+    username: str
+    # password_hash: SecretStr = Field(strip_whitespace=True, min_length=5)
+    password_hash: constr(strip_whitespace=True, min_length=5)
+
+    class Config:
+        use_enum_values = True
+
+
 class DBPredictionRecord(BaseModel):
     """Parse & validate records used to populate database."""
 
     id: int
     url: HttpUrl
     text: str
-    added_by_user: str
+    user_id: int
 
 
 class PredictionRecord(BaseModel):
@@ -42,4 +61,4 @@ class PredictionRecord(BaseModel):
 
     url: HttpUrl
     text: str
-    added_by_user: str
+    user_id: int

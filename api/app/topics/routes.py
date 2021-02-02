@@ -2,83 +2,95 @@
 # -*- coding: utf-8 -*-
 
 
+import asyncio
 import os
 from typing import Dict, List, Union
 
 import app.schemas as sc
 import jwt
 import pandas as pd
-from app.models import DBPrediction
-from auth.utils import oauth2_scheme
+from app.models import DBPrediction, DBUser
+from app.schemas import DBUser as DBUser_Pydantic
+from auth.utils import (
+    get_password_hash,
+    oauth2_scheme,
+    user_pydantic_from_sqlalchemy,
+    get_current_user,
+)
 from fastapi import APIRouter, Depends, HTTPException, status
-from models import User, User_Pydantic
-from tortoise.contrib.fastapi import HTTPNotFoundError
 
 router = APIRouter()
 
-JWT_SECRET = os.environ.get("JWT_SECRET", "myjwtsecret")
-
-
+DBUserRecord = sc.DBUserRecord
+DBUserRecords = List[DBUserRecord]
+Users = List[sc.DBUser]
 DBPredictionRecord = sc.DBPredictionRecord
 DBPredictionRecords = List[DBPredictionRecord]
 PredictionRecords = List[sc.PredictionRecord]
 NewsArticles = List[sc.NewsArticle]
 
-
-async def get_current_user(token: str = Depends(oauth2_scheme)):
-    try:
-        payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
-        user = await User.get(id=payload.get("id"))
-    except:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid username or password",
-        )
-
-    return await User_Pydantic.from_tortoise_orm(user)
+# JWT_SECRET = os.environ.get("JWT_SECRET", "myjwtsecret")
 
 
-@router.get("/users/me", response_model=User_Pydantic)
-async def get_my_user(user: User_Pydantic = Depends(get_current_user)):
-    return user
+# DBPredictionRecord = sc.DBPredictionRecord
+# DBPredictionRecords = List[DBPredictionRecord]
+# PredictionRecords = List[sc.PredictionRecord]
+# NewsArticles = List[sc.NewsArticle]
 
 
-@router.get(
-    "/users",
-    response_model=Dict[str, Union[List[User_Pydantic], str]],
-    responses={404: {"model": HTTPNotFoundError}},
+# async def get_current_user(token: str = Depends(oauth2_scheme)):
+#     try:
+#         payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
+#         db_user = await DBUser.get_one_by_username(payload.get("username"))
+#         db_user_pydantic = user_pydantic_from_sqlalchemy(db_user)
+#     except:
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED,
+#             detail="Invalid username or password",
+#         )
+
+#     return db_user_pydantic
+
+
+# @router.get("/users/me", response_model=sc.DBUser)
+# async def get_my_user(user: sc.DBUser = Depends(get_current_user)):
+#     return user
+
+
+# @router.get(
+#     "/users",
+#     response_model=Dict[str, Union[DBUserRecords, str]],
+# )
+# async def get_users(user: sc.DBUser = Depends(get_current_user)):
+#     db_users = await DBUser.get_all()
+#     return {
+#         "msg": [DBUserRecord(**db_user).dict() for db_user in db_users],
+#         "current_user": user.username,
+#     }
+
+
+# @router.get(
+#     "/user/{user_id}",
+#     response_model=Dict[str, Union[DBUserRecord, str]],
+# )
+# async def get_user(user_id: int, user: sc.DBUser = Depends(get_current_user)):
+#     db_user = await DBUser.get_one(user_id)
+#     if db_user:
+#         return {
+#             "msg": DBUserRecord(**db_user).dict(),
+#             "current_user": user.username,
+#         }
+#     else:
+#         raise HTTPException(
+#             status_code=418, detail=f"Received Invalid user ID: {user_id}."
+#         )
+
+
+@router.post(
+    "/predict", response_model=Dict[str, Union[PredictionRecords, str]]
 )
-async def get_users(user: User_Pydantic = Depends(get_current_user)):
-    pydantic_user_objs = await User_Pydantic.from_queryset(User.all())
-    return {
-        "msg": pydantic_user_objs,
-        "current_user": user.username,
-    }
-
-
-@router.get(
-    "/user/{user_id}",
-    response_model=Dict[str, Union[Dict[str, str], str]],
-    responses={404: {"model": HTTPNotFoundError}},
-)
-async def get_user(
-    user_id: int, user: User_Pydantic = Depends(get_current_user)
-):
-    pydantic_user_obj = await User_Pydantic.from_queryset_single(
-        User.get(id=user_id)
-    )
-    return {
-        "msg": {
-            "id": user_id,
-            "username": pydantic_user_obj.username,
-        },
-        "current_user": user.username,
-    }
-
-
-@router.post("/predict", response_model=Dict[str, PredictionRecords])
 async def predict_species(
-    newsarticles: NewsArticles, user: User_Pydantic = Depends(get_current_user)
+    newsarticles: NewsArticles, user: sc.DBUser = Depends(get_current_user)
 ):
     df_method1 = pd.concat(
         [newsarticle.to_df() for newsarticle in newsarticles]
@@ -87,18 +99,23 @@ async def predict_species(
         [dict(newsarticle) for newsarticle in newsarticles]
     )
     assert df_method1.equals(df_method2)
+    db_user = await DBUser.get_one_by_username(username=user.username)
+    db_user_id = db_user.get("id")
     df_predictions = df_method1.assign(
-        added_by_user=[user.username] * len(df_method1)
+        user_id=[db_user_id] * len(df_method1)
     ).to_dict("records")
     await DBPrediction.create(df_predictions)
-    return {"msg": df_predictions}
+    return {
+        "msg": df_predictions,
+        "current_user": user.username,
+    }
 
 
 @router.get(
     "/read_predictions",
     response_model=Dict[str, Union[DBPredictionRecords, str]],
 )
-async def read_predictions(user: User_Pydantic = Depends(get_current_user)):
+async def read_predictions(user: sc.DBUser = Depends(get_current_user)):
     notes = await DBPrediction.get_all()
     return {
         "msg": [DBPredictionRecord(**note).dict() for note in notes],

@@ -1,6 +1,9 @@
 sqlalchemy
 sqlalchemy-utils
-databases
+psycopg2_binary
+databases[postgres]
+asyncpg
+alembic
 python-multipart
 bcrypt
 passlib
