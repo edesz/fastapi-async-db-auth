@@ -5,7 +5,7 @@
 import os
 
 import jwt
-from app.models import DBUser
+from app.db import DBUser
 from app.schemas import DBUser as DBUser_Pydantic
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer

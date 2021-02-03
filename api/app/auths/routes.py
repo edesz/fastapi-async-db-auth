@@ -1,7 +1,7 @@
 from typing import Dict, List, Union
 
 import app.schemas as sc
-from app.models import DBUser
+from app.db import DBUser
 from auth.utils import get_current_user
 from fastapi import APIRouter, Depends, HTTPException, status
 

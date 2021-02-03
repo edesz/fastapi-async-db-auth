@@ -18,6 +18,21 @@ create-db:
 	tox -e manage-db -- 'CREATE'
 .PHONY: create-db
 
+## Run alembic init
+alembic-init:
+	./run.sh "alembicinit"
+.PHONY: alembic-init
+
+## Run alembic autogenerate
+alembic-auto:
+	./run.sh "alembicauto"
+.PHONY: alembic-auto
+
+## Run alembic migration
+alembic-migrate:
+	./run.sh "alembicmigrate"
+.PHONY: alembic-migrate
+
 ## Verify
 verify:
 	tox -e verify

@@ -13,13 +13,15 @@ from fastapi.security import OAuth2PasswordRequestForm
 from tortoise.contrib.fastapi import register_tortoise
 
 import app.schemas as sc
-from app.db import database2 as databasetwo  # , database
-from app.models import DBUser
+from app.db import database2 as databasetwo, get_db2 as get_db
+from app.db import DBUser
 from app.router import api_router
 from auth.utils import authenticate_user, get_password_hash
 
 JWT_SECRET = os.environ.get("JWT_SECRET", "myjwtsecret")
 Users = List[sc.DBUser]
+
+get_db()
 
 app = FastAPI()
 
@@ -58,15 +60,28 @@ async def generate_token(form_data: OAuth2PasswordRequestForm = Depends()):
 @app.post("/create_users", response_model=Dict)
 async def create_users(users: Users):
     user_records = []
+    errors = []
     for _, user in enumerate(users):
         # print(user, type(user))
-        pwd_hash = get_password_hash(user.password_hash)
-        user_records.append(
-            dict(
-                username=user.username,
-                password_hash=pwd_hash,
+        db_user = await DBUser.get_one_by_username(user.username)
+        if db_user:
+            errors.append(user.username)
+        else:
+            pwd_hash = get_password_hash(user.password_hash)
+            user_records.append(
+                dict(
+                    username=user.username,
+                    password_hash=pwd_hash,
+                )
             )
+    try:
+        assert not errors
+    except AssertionError as _:
+        duplicate_username_err = (
+            f"Usernames [{','.join(errors)}] not available. "
+            "Please change and re-register."
         )
+        raise HTTPException(status_code=409, detail=duplicate_username_err)
     await DBUser.create(user_records)
     new_usernames = [user["username"] for user in user_records]
     return {

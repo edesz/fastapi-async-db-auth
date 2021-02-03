@@ -9,7 +9,7 @@ from typing import Dict, List, Union
 import app.schemas as sc
 import jwt
 import pandas as pd
-from app.models import DBPrediction, DBUser
+from app.db import DBPrediction, DBUser
 from app.schemas import DBUser as DBUser_Pydantic
 from auth.utils import (
     get_password_hash,
@@ -87,7 +87,7 @@ NewsArticles = List[sc.NewsArticle]
 
 
 @router.post(
-    "/predict", response_model=Dict[str, Union[PredictionRecords, str]]
+    "/predict", response_model=Dict[str, Union[PredictionRecords, str, List]]
 )
 async def predict_species(
     newsarticles: NewsArticles, user: sc.DBUser = Depends(get_current_user)
@@ -101,12 +101,19 @@ async def predict_species(
     assert df_method1.equals(df_method2)
     db_user = await DBUser.get_one_by_username(username=user.username)
     db_user_id = db_user.get("id")
-    df_predictions = df_method1.assign(
-        user_id=[db_user_id] * len(df_method1)
-    ).to_dict("records")
+    df_predictions = df_method1.assign(user_id=[db_user_id] * len(df_method1))
+    duplicate_predictions = []
+    for _, row in df_predictions.iterrows():
+        db_prediction = await DBPrediction.get_one_by_url(row["url"])
+        if db_prediction:
+            row["text"] = db_prediction.get("text")
+            row["user_id"] = db_user_id
+            duplicate_predictions.append(row["url"])
+    df_predictions = df_predictions.to_dict("records")
     await DBPrediction.create(df_predictions)
     return {
         "msg": df_predictions,
+        "duplicate_predictions_posted": duplicate_predictions,
         "current_user": user.username,
     }
 
