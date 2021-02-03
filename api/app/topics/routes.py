@@ -38,20 +38,27 @@ async def predict_species(
     db_user = await DBUser.get_one_by_username(username=user.username)
     db_user_id = db_user.get("id")
     df_predictions = df_method1.assign(user_id=[db_user_id] * len(df_method1))
-    duplicate_predictions = []
+    errors = []
     for _, row in df_predictions.iterrows():
         db_prediction = await DBPrediction.get_one_by_url(row["url"])
         if db_prediction:
-            row["text"] = db_prediction.get("text")
-            row["user_id"] = db_user_id
-            duplicate_predictions.append(row["url"])
-    df_predictions = df_predictions.to_dict("records")
-    await DBPrediction.create(df_predictions)
-    return {
-        "msg": df_predictions,
-        "duplicate_predictions_posted": duplicate_predictions,
-        "current_user": user.username,
-    }
+            errors.append(row["url"])
+    try:
+        assert not errors
+    except AssertionError as _:
+        duplicate_username_err = (
+            f"Predictions for urls already registered: [{','.join(errors)}] "
+            "Please remove and re-POST. See /topics/read_predictions?url=..."
+            "to retrieve previously registered predictions."
+        )
+        raise HTTPException(status_code=409, detail=duplicate_username_err)
+    else:
+        df_predictions = df_predictions.to_dict("records")
+        await DBPrediction.create(df_predictions)
+        return {
+            "msg": df_predictions,
+            "current_user": user.username,
+        }
 
 
 @router.get(

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-"""Verification of handling invalid requests."""
+"""Verification of handling valid requests."""
 
 
 import json
@@ -56,12 +56,7 @@ if __name__ == "__main__":
     )
     assert r.status_code == 200
     r_text = json.loads(r.text)
-    assert list(r_text) == [
-        "msg",
-        "duplicate_predictions_posted",
-        "current_user",
-    ]
-    assert len(list(r_text["duplicate_predictions_posted"])) == 1
+    assert list(r_text) == ["msg", "current_user"]
     assert r_text["current_user"] == USERNAME
 
     # Read Predictions
@@ -77,13 +72,13 @@ if __name__ == "__main__":
     # Read Prediction
     url = urljoin(
         f"{HOST_PORT}/api/v1/topics/",
-        "read_prediction?url={multi_obs_list[0]['url']}",
+        f"read_prediction?url={multi_obs_list[0]['url']}",
     ).lower()
     r = requests.get(url, headers=headers)
     r_text = json.loads(r.text)
     assert r.status_code == 200
     assert list(r_text) == ["msg", "current_user"]
-    assert list(r_text["msg"][0].keys()) == ["id", "url", "text", "user_id"]
+    assert list(r_text["msg"].keys()) == ["id", "url", "text", "user_id"]
     assert r_text["current_user"] == USERNAME
 
     # Verify response of /auths/users/me GET endpoint with authentication
@@ -93,8 +88,8 @@ if __name__ == "__main__":
     assert list(json.loads(r.text)) == ["username", "password_hash"]
 
     # Verify response of /auths/user/{user_id} GET endpoint with authentication
-    id = 3
-    url = urljoin(f"{HOST_PORT}/api/v1/auths/user/", str(id)).lower()
+    user_id = 2
+    url = urljoin(f"{HOST_PORT}/api/v1/auths/user/", str(user_id)).lower()
     r = requests.get(url, headers=headers)
     assert r.status_code == 200
     r_text = json.loads(r.text)
@@ -110,5 +105,5 @@ if __name__ == "__main__":
     assert r.status_code == 200
     assert list(r_text) == ["msg", "current_user"]
     assert list(r_text["msg"][0].keys()) == ["id", "username", "password_hash"]
-    assert len(r_text["msg"]) == 3
+    assert len(r_text["msg"]) == user_id
     assert r_text["current_user"] == USERNAME
