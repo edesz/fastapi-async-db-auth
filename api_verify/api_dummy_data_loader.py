@@ -10,7 +10,7 @@ import requests
 
 def create_user(username, password_hash, host_port):
     # Create User
-    url = urljoin(f"{host_port}/", "users").lower()
+    url = urljoin(f"{host_port}/", "create_users").lower()
     headers = {"Content-Type": "application/json"}
     r = requests.post(
         url,
@@ -19,6 +19,8 @@ def create_user(username, password_hash, host_port):
         ),
         headers=headers,
     )
+    # print(r.status_code)
+    # print(json.loads(r.text))
     assert r.status_code == 200
     assert list(json.loads(r.text)) == ["msg"]
 
@@ -37,6 +39,8 @@ def create_user(username, password_hash, host_port):
         },
         headers=headers,
     )
+    # print(r.status_code)
+    # print(json.loads(r.text))
     assert r.status_code == 200
     response_dict = json.loads(r.text)
     assert list(response_dict) == ["access_token", "token_type"]

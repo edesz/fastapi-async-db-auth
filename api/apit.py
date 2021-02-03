@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 
-import asyncio
 import os
 from typing import Dict, List
 
@@ -10,32 +9,28 @@ import jwt
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
-from tortoise.contrib.fastapi import register_tortoise
 
 import app.schemas as sc
-from app.db import database2 as databasetwo, get_db2 as get_db
-from app.db import DBUser
+import app.db as db
 from app.router import api_router
 from auth.utils import authenticate_user, get_password_hash
 
 JWT_SECRET = os.environ.get("JWT_SECRET", "myjwtsecret")
 Users = List[sc.DBUser]
 
-get_db()
+db.get_db()
 
 app = FastAPI()
 
 
 @app.on_event("startup")
 async def startup():
-    # await database.connect()
-    await databasetwo.connect()
+    await db.database.connect()
 
 
 @app.on_event("shutdown")
 async def shutdown():
-    # await database.disconnect()
-    await databasetwo.disconnect()
+    await db.database.disconnect()
 
 
 app.include_router(api_router, prefix="/api/v1")
@@ -62,8 +57,7 @@ async def create_users(users: Users):
     user_records = []
     errors = []
     for _, user in enumerate(users):
-        # print(user, type(user))
-        db_user = await DBUser.get_one_by_username(user.username)
+        db_user = await db.DBUser.get_one_by_username(user.username)
         if db_user:
             errors.append(user.username)
         else:
@@ -82,7 +76,7 @@ async def create_users(users: Users):
             "Please change and re-register."
         )
         raise HTTPException(status_code=409, detail=duplicate_username_err)
-    await DBUser.create(user_records)
+    await db.DBUser.create(user_records)
     new_usernames = [user["username"] for user in user_records]
     return {
         "msg": f"Created {len(user_records)} users: {', '.join(new_usernames)}"
