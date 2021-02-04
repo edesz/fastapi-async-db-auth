@@ -48,11 +48,11 @@ test:
 	@docker volume ls
 .PHONY: test
 
-## Show test coverage HTML report
-show-cov-html:
+## Show test summary report
+test-summary:
 	@echo "+ $@"
-	@tox -e showcovhtml -- $(SHOW_COV_HTML)
-.PHONY: show-cov-html
+	@tox -e testsummary
+.PHONY: test-summary
 
 ## Verify
 verify:
