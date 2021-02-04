@@ -39,6 +39,7 @@ def user_pydantic_from_sqlalchemy(db_user):
 async def authenticate_user(username: str, password: str):
     user = await DBUser.get_one_by_username(username=username)
     db_user_pydantic = user_pydantic_from_sqlalchemy(user)
+    # print(db_user_pydantic)
     if not username:
         # print(1)
         return False, False
@@ -52,12 +53,17 @@ async def authenticate_user(username: str, password: str):
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     try:
         payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
+        # print(1, payload)
         db_user = await DBUser.get_one_by_username(payload.get("username"))
+        # print(2, db_user)
         db_user_pydantic = user_pydantic_from_sqlalchemy(db_user)
+        # print(3, db_user_pydantic)
     except:
+        # print(4)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid username or password",
         )
+        # print(5)
 
     return db_user_pydantic

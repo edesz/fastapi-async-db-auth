@@ -23,9 +23,9 @@ NewsArticles = List[sc.NewsArticle]
 
 
 @router.post(
-    "/predict", response_model=Dict[str, Union[PredictionRecords, str, List]]
+    "/create", response_model=Dict[str, Union[PredictionRecords, str, List]]
 )
-async def predict_species(
+async def create(
     newsarticles: NewsArticles, user: sc.DBUser = Depends(get_current_user)
 ):
     df_method1 = pd.concat(
@@ -36,25 +36,32 @@ async def predict_species(
     )
     assert df_method1.equals(df_method2)
     db_user = await DBUser.get_one_by_username(username=user.username)
+    # print(1, db_user)
     db_user_id = db_user.get("id")
+    # print(db_user_id)
     df_predictions = df_method1.assign(user_id=[db_user_id] * len(df_method1))
     errors = []
     for _, row in df_predictions.iterrows():
         db_prediction = await DBPrediction.get_one_by_url(row["url"])
+        # print(3, db_prediction)
         if db_prediction:
             errors.append(row["url"])
     try:
         assert not errors
+        # print(4)
     except AssertionError as _:
+        # print(5)
         duplicate_username_err = (
-            f"Predictions for urls already registered: [{','.join(errors)}] "
-            "Please remove and re-POST. See /topics/read_predictions?url=..."
+            f"Attempting to re-create entries for: [{','.join(errors)}] "
+            "Please remove these. See /topics/read_records?url=..."
             "to retrieve previously registered predictions."
         )
         raise HTTPException(status_code=409, detail=duplicate_username_err)
     else:
+        # print(6)
         df_predictions = df_predictions.to_dict("records")
         await DBPrediction.create(df_predictions)
+        # print(7)
         return {
             "msg": df_predictions,
             "current_user": user.username,

@@ -3,10 +3,12 @@
 HOST=0.0.0.0
 API_PORT=8050
 HOSTNAME=localhost
-POSTGRES_PORT=5432
+POSTGRES_PORT=5434
 POSTGRES_DB=test_db
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
+API_USER_NAME=anthony
+API_USER_PASSWORD=mysecret
 
 ## Run API
 api:
@@ -32,6 +34,25 @@ alembic-auto:
 alembic-migrate:
 	./run.sh "alembicmigrate"
 .PHONY: alembic-migrate
+
+## Test
+test:
+	@echo "+ $@"
+	@docker-compose up -d --build
+	@sleep 5
+	@tox -e test
+	@docker-compose down -v
+	@docker rmi postgres
+	@docker images
+	@docker volume prune -f
+	@docker volume ls
+.PHONY: test
+
+## Show test logs
+test-logs:
+	@echo "+ $@"
+	@python3 api/tests/testing_utils/show_test_reports.py -s True
+.PHONY: test-logs
 
 ## Verify
 verify:
