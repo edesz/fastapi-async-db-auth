@@ -21,6 +21,10 @@ jobs:
           AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
           AZURE_STORAGE_KEY: ${{ secrets.AZURE_STORAGE_KEY }}
           ENDPOINT_SUFFIX: ${{ secrets.ENDPOINT_SUFFIX }}
+      - name: Show test coverage HTML
+        run: make show-cov-html
+        env:
+          SHOW_COV_HTML: False
       # - name: Upload coverage data to coveralls.io
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

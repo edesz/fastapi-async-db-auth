@@ -1,6 +1,6 @@
 # fastapi-async-db-auth
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/mit)
+![CI](https://github.com/edesz/fastapi-async-db-auth/workflows/CI/badge.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/mit)
 
 ## About
 A simple repo to demonstrate FastAPI with

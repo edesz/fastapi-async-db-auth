@@ -48,11 +48,11 @@ test:
 	@docker volume ls
 .PHONY: test
 
-## Show test logs
-test-logs:
+## Show test coverage HTML report
+show-cov-html:
 	@echo "+ $@"
-	@python3 api/tests/testing_utils/show_test_reports.py -s True
-.PHONY: test-logs
+	@tox -e showcovhtml -- $(SHOW_COV_HTML)
+.PHONY: show-cov-html
 
 ## Verify
 verify:
