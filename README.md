@@ -12,7 +12,7 @@
 - [Future Improvements](#future-improvements)
 
 ## [About](#about)
-This is a **minimal** [FastAPI](https://fastapi.tiangolo.com/) project, with `fastapi` and external dependencies to facilitate use of a postgres database (controlled by `sqlalchemy` and requiring user authentication) and unit tests (mocking database access, when required) to demonstrate FastAPI with
+This is a **minimal** [FastAPI](https://fastapi.tiangolo.com/) project, with `fastapi` and external dependencies to facilitate use of a postgres database (controlled by `sqlalchemy` and requiring user authentication) and unit tests (mocking database access, when required) to start using FastAPI with
 
 - an asynchronous database (only create and read) operations controlled by `sqlalchemy`, per [FastAPI async database docs](https://fastapi.tiangolo.com/advanced/async-sql-databases/)
 - alembic migrations, per Alembic docs ([configure](https://alembic.sqlalchemy.org/en/latest/tutorial.html), [auto-generate](https://alembic.sqlalchemy.org/en/latest/autogenerate.html#auto-generating-migrations))
