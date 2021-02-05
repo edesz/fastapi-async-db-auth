@@ -15,15 +15,12 @@ jobs:
         run: python -m pip install --upgrade pip
       - name: Install dependencies
         run: pip install tox
-      - name: Run tests
-        run: make test
+      - name: Run tests and Show test summary
+        run: make tests
         env:
           AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
           AZURE_STORAGE_KEY: ${{ secrets.AZURE_STORAGE_KEY }}
           ENDPOINT_SUFFIX: ${{ secrets.ENDPOINT_SUFFIX }}
-      - name: Show test summary
-        run: make test-summary
-        env:
           SHOW_COV_HTML: False
       # - name: Upload coverage data to coveralls.io
       #   env:
