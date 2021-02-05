@@ -12,13 +12,11 @@ API_USER_PASSWORD=mysecret
 
 ## Run API
 api:
-	tox -e api
+	@echo "+ $@"
+	@docker-compose up -d --build
+	@sleep 5
+	@tox -e api
 .PHONY: api
-
-## Create Database
-create-db:
-	tox -e manage-db -- 'CREATE'
-.PHONY: create-db
 
 ## Run alembic init
 alembic-init:
@@ -35,8 +33,8 @@ alembic-migrate:
 	./run.sh "alembicmigrate"
 .PHONY: alembic-migrate
 
-## Test
-test:
+## Run tests
+run-tests:
 	@echo "+ $@"
 	@docker-compose up -d --build
 	@sleep 5
@@ -44,50 +42,32 @@ test:
 	@docker-compose down -v
 	@docker rmi postgres
 	@docker images
-	@docker volume prune -f
-	@docker volume ls
-.PHONY: test
+.PHONY: run-tests
 
-## Show test summary report
+## Show test summary report(s)
 test-summary:
 	@echo "+ $@"
 	@tox -e testsummary
 .PHONY: test-summary
 
+## Run tests and reports
+.PHONY: tests
+tests: run-tests test-summary
+
+## Remove Python file artifacts
+clean-tests:
+	@echo "+ $@"
+	@find ./api -type f -name "*.py[co]" -delete
+	@find ./api -type d -name "__pycache__" -delete
+	@find "api/tests/test-logs/htmlcov" -type f -delete
+	@find "api/tests/test-logs/" -type f -name "*report*" -delete
+	@rm -rf api/tests/test-logs/htmlcov api/.coverage
+.PHONY: clean-tests
+
 ## Verify
 verify:
 	tox -e verify
 .PHONY: verify
-
-## Delete Database
-delete-db:
-	tox -e manage-db -- 'DROP'
-.PHONY: delete-db
-
-## Start API service
-up:
-	docker-compose up --detach
-.PHONY: up
-
-## Logs
-logs:
-	./run.sh "logs"
-.PHONY: logs
-
-## Stop services
-stop:
-	docker-compose stop
-.PHONY: stop
-
-## Remove all containers
-down:
-	docker-compose down
-.PHONY: down
-
-## Remove built images for services
-delete-api-image:
-	./run.sh "delete"
-.PHONY: delete-api-image
 
 list:
 	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$'

@@ -2,9 +2,80 @@
 
 ![CI](https://github.com/edesz/fastapi-async-db-auth/workflows/CI/badge.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/mit)
 
-## About
-A simple repo to demonstrate FastAPI with
+## [Table of Contents](#table-of-contents)
 
-- an asynchronous database (create and read) operations controlled by `sqlalchemy`, per [FastAPI async database docs](https://fastapi.tiangolo.com/advanced/async-sql-databases/)
+- [About](#about)
+- [Usage](#usage)
+- [Features](#features)
+- [Contributions](#contributions)
+- [Attributions](#attributions)
+- [Future Improvements](#future-improvements)
+
+## [About](#about)
+This is a **minimal** [FastAPI](https://fastapi.tiangolo.com/) project, with `fastapi` and external dependencies to facilitate use of a postgres database (controlled by `sqlalchemy` and requiring user authentication) and unit tests (mocking database access, when required) to demonstrate FastAPI with
+
+- an asynchronous database (only create and read) operations controlled by `sqlalchemy`, per [FastAPI async database docs](https://fastapi.tiangolo.com/advanced/async-sql-databases/)
 - alembic migrations, per Alembic docs ([configure](https://alembic.sqlalchemy.org/en/latest/tutorial.html), [auto-generate](https://alembic.sqlalchemy.org/en/latest/autogenerate.html#auto-generating-migrations))
 - OAuth2 with Password (and hashing), Bearer with JWT tokens (follows the [FastAPI authentication docs](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/#oauth2-with-password-and-hashing-bearer-with-jwt-tokens))
+
+## [Usage](#usage)
+
+## [Features](#features)
+Included
+- API using the [ASGI-based FastAPI](https://fastapi.tiangolo.com/advanced/middleware/#adding-asgi-middlewares) web framework to serve dummy [Machine Learning (ML)](https://en.wikipedia.org/wiki/Machine_learning) predictions
+- [PostgreSQL database](https://www.postgresql.org/) support to store records (ML predictions), with migrations facilitated via `alembic`
+- mock unit tests using [containerized Postgres database](https://hub.docker.com/_/postgres)
+- user-authentication with Oauth2 using password, bearer and JWT
+- `Makefile` with tasks to reproducibly run necessary tasks
+  - alembic migrations
+  - happypath unit tests
+  - use `gunicorn` to manage `uvicorn` for a mixture of asynchronous Python and parallelism
+  - api verification using Python `requests`
+- use `tox`, the `virtualenv` management CLI tool to isolate dependencies from systemwide Python packages
+
+Not included
+- no support for a front end material (templates, static files - Bootstrap, Tailwind, CSS, etc.)
+- no support for [deployment of the API](https://fastapi.tiangolo.com/deployment/)
+- any other sophisticated features; it is up to you to chose how to implement your API
+- features specific to ML applications that prevent broader use of this project in other types of applications
+
+## [Contributions](#contributions)
+Contributions to this project are most welcome via pull requests!
+
+Just keep in mind that the goal of this project is to provide a fast method to start using FastAPI with databases and user-authentication. So, it is hoped that this project will remain a "minimal" one.
+
+If you prefer to use an exhaustive pre-made template, with a more complete set of production-ready features, then the official [FastAPI project generation templates](https://fastapi.tiangolo.com/project-generation/) are likely a better fit to your use-case.
+
+Also, note that the ML-specific aspect of this project is limited to the name of the main table in the database and its column names. New features should avoid trying to tune this to be an ML-only starter project. Again, an officially supported [ML-specific FastAPI `cookiecutter`](https://fastapi.tiangolo.com/project-generation/#machine-learning-models-with-spacy-and-fastapi) already exists and may fit ML applications better than this project.
+
+If you would like to make a change, you can run tests locally from the project's root directory using
+
+```bash
+$ make tests
+```
+in order to test the changes you've made.
+
+## [Attributions](#attributions)
+This project is primarily based on
+- authentication
+  - the section from the FastAPI documentation on [OAuth2 with password, bearer and json web token](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/)
+  - [prettyprinted project](https://github.com/PrettyPrinted/youtube_video_code/blob/master/2021/01/05/FastAPI%20Authentication%20Example%20With%20OAuth2%20and%20Tortoise%20ORM/fastapiauth/main.py)
+- (for SQLAlchemy model classes) the [`ahmednafies/fastapi_async_db`](https://github.com/ahmednafies/fastapi_async_db) project
+
+Other sources used were documentation for the following Python packages
+- [FastAPI](https://fastapi.tiangolo.com/)
+- [Alembic](https://alembic.sqlalchemy.org/en/latest/tutorial.html#tutorial)
+- [SQLAlchemy](https://docs.sqlalchemy.org/en/14/index.html)
+- [Databases](https://www.encode.io/databases/)
+- [PyTest](https://docs.pytest.org/en/stable/monkeypatch.html#simple-example-monkeypatching-functions)
+- [Coverage (for Pytest)](https://coverage.readthedocs.io/en/coverage-5.4/index.html)
+- [Tox](https://tox.readthedocs.io/en/latest/index.html)
+
+## [Future Improvements](#future-improvements)
+A preliminary list of ideas to be added is shown below
+1. Add update and delete components of [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
+2. Add demo (basic) front-end HTML website
+3. Add [ReadTheDocs](https://readthedocs.org/) documentation
+4. Explore feasibility of including `docker-compose` to streamline management of database and api services
+5. Convert this repository into a [Python `cookiecutter`](https://cookiecutterreadthedocs.io/en/latest/), to allow for more customized re-use when starting new projects
+6. Offer basic deployment support for Azure, Heroku and others, via GitHub Actions

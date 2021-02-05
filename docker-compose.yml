@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: test_db
     volumes:
-      - postgres_data:${HOME}/tmp/
+      - ${HOME}/Pictures/postgres_data:/var/lib/postgresql/data/
     ports:
       - "5434:5432"
 
