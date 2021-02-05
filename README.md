@@ -1,6 +1,33 @@
-# fastapi-async-db-auth
+<div align="center">
+  <h1>FastAPI minimal project with PostgreSQL and user authentication</h1>
+</div>
 
-![CI](https://github.com/edesz/fastapi-async-db-auth/workflows/CI/badge.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/mit)
+<div align="center">
+  <a href="https://github.com/psf/black/blob/master/LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-brightgreen.svg"></a>
+  <a href="https://github.com/edesz/fastapi-async-db-auth/pulls"><img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square"></a>
+  <a href="https://github.com/edesz/fastapi-async-db-auth/actions">
+    <img src="https://github.com/edesz/fastapi-async-db-auth/workflows/CI/badge.svg"/>
+  </a>
+  <a href="https://github.com/psf/black/blob/master/LICENSE"><img alt="Open Source?: Yes" src="https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github"></a>
+  <a href="https://codecov.io/gh/edesz/fastapi-async-db-auth">
+    <img src="https://codecov.io/gh/edesz/fastapi-async-db-auth/branch/main/graph/badge.svg?token=JYERV7HUHM"/>
+  </a>
+</div>
+
+<div align="center">
+<a href="https://www.python.org/">
+  <img alt="Made With: Python" src="https://forthebadge.com/images/badges/made-with-python.svg"/>
+</a>
+<a href="https://html.com/">
+  <img alt="Uses: HTML" src="https://forthebadge.com/images/badges/uses-html.svg"/>
+</a>
+</div>
+
+<div align="center">
+<a href="https://codecov.io/gh/edesz/fastapi-async-db-auth">
+  <img alt="https://github.com/edesz/fastapi-async-db-auth" src="https://codecov.io/gh/edesz/fastapi-async-db-auth/branch/main/graphs/sunburst.svg"/>
+</a>
+</div>
 
 ## [Table of Contents](#table-of-contents)
 
@@ -32,7 +59,7 @@ Included
 - use `tox`, the `virtualenv` management CLI tool to
   - isolate dependencies from systemwide Python packages
   - run tests locally and in CI
-- demo (basic) front-end starter (templates, static files)
+- demo (basic) webpage content (templates, static files)
 
 Not included
 - no support for [deployment of the API](https://fastapi.tiangolo.com/deployment/)
@@ -61,13 +88,15 @@ Not included
    ```
 
 ## [Contributions](#contributions)
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=edesz&theme=blue-green&repo=fastapi-async-db-auth)](https://github.com/edesz/fastapi-async-db-auth)
+
 Contributions to this project are welcome via pull requests!
 
 Just keep in mind that the goal of this project is to provide a fast method to start using FastAPI with databases and user-authentication. So, it is hoped that this project will remain a "minimal" one.
 
 If you prefer to use an exhaustive pre-made template, with a more complete set of production-ready features, then the official [FastAPI project generation templates](https://fastapi.tiangolo.com/project-generation/) are likely a better fit to your use-case.
 
-Also, note that the ML-specific aspect of this project is limited to the name of the main table in the database and its column names. New features should avoid trying to tune this to be an ML-only starter project. Again, an officially supported [ML-specific FastAPI `cookiecutter`](https://fastapi.tiangolo.com/project-generation/#machine-learning-models-with-spacy-and-fastapi) already exists and may fit ML applications better than this project.
+Also, note that an officially supported [ML-specific FastAPI `cookiecutter`](https://fastapi.tiangolo.com/project-generation/#machine-learning-models-with-spacy-and-fastapi) already exists and may fit ML applications better than this minimal project.
 
 If you would like to make a change, you can run tests locally from the project's root directory using
 
