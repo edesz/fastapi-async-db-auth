@@ -3,10 +3,12 @@
 
 
 import pandas as pd
-from pydantic import BaseModel, Field, HttpUrl, SecretStr, constr, validator
+from pydantic import BaseModel, HttpUrl, constr, validator
 
 
 class NewsArticle(BaseModel):
+    """Pydantic model to parse & validate news article input from user."""
+
     url: HttpUrl
     text: constr(min_length=20)
 
@@ -29,6 +31,8 @@ class NewsArticle(BaseModel):
 
 
 class DBUser(BaseModel):
+    """Pydantic model to parse & validate user."""
+
     username: str
     password_hash: constr(strip_whitespace=True, min_length=5)
 
@@ -37,6 +41,8 @@ class DBUser(BaseModel):
 
 
 class DBUserRecord(BaseModel):
+    """Pydantic model to parse & validate user record from database."""
+
     id: int
     username: str
     password_hash: constr(strip_whitespace=True, min_length=5)
@@ -46,7 +52,7 @@ class DBUserRecord(BaseModel):
 
 
 class DBPredictionRecord(BaseModel):
-    """Parse & validate records used to populate database."""
+    """Pydantic model to parse & validate prediction from database."""
 
     id: int
     url: HttpUrl
@@ -55,25 +61,25 @@ class DBPredictionRecord(BaseModel):
 
 
 class PredictionRecord(BaseModel):
-    """Parse & validate predictions to respond to API request."""
+    """Pydantic model to parse & validate prediction."""
 
     url: HttpUrl
     text: str
     user_id: int
 
 
-class NewsArticleUrl(BaseModel):
-    url: HttpUrl
+# class NewsArticleUrl(BaseModel):
+#     url: HttpUrl
 
-    @validator("url")
-    def validate_url(cls, v):
-        errors = []
-        if "theguardian.com" not in v:
-            errors.append("URL not from theguardian.com")
-        if "https" not in v:
-            errors.append("URL not HTTPs")
-        assert not errors, f"{','.join(errors)}"
-        return v
+#     @validator("url")
+#     def validate_url(cls, v):
+#         errors = []
+#         if "theguardian.com" not in v:
+#             errors.append("URL not from theguardian.com")
+#         if "https" not in v:
+#             errors.append("URL not HTTPs")
+#         assert not errors, f"{','.join(errors)}"
+#         return v
 
-    class Config:
-        use_enum_values = True
+#     class Config:
+#         use_enum_values = True

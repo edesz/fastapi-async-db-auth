@@ -17,6 +17,7 @@ router = APIRouter()
 
 @router.get("/users/me", response_model=sc.DBUser)
 async def get_my_user(user: sc.DBUser = Depends(get_current_user)):
+    """Read current user from users table."""
     return user
 
 
@@ -25,6 +26,7 @@ async def get_my_user(user: sc.DBUser = Depends(get_current_user)):
     response_model=Dict[str, Union[DBUserRecords, str]],
 )
 async def get_users(user: sc.DBUser = Depends(get_current_user)):
+    """Read all users from users table."""
     db_users = await DBUser.get_all()
     return {
         "msg": [DBUserRecord(**db_user).dict() for db_user in db_users],
@@ -37,6 +39,7 @@ async def get_users(user: sc.DBUser = Depends(get_current_user)):
     response_model=Dict[str, Union[DBUserRecord, str]],
 )
 async def get_user(user_id: int, user: sc.DBUser = Depends(get_current_user)):
+    """Read single user, by user id, from users table."""
     db_user = await DBUser.get_one(user_id)
     if db_user:
         return {

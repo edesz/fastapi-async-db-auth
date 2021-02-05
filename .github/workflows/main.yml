@@ -18,11 +18,23 @@ jobs:
       - name: Run tests and Show test summary
         run: make tests
         env:
-          AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
-          AZURE_STORAGE_KEY: ${{ secrets.AZURE_STORAGE_KEY }}
-          ENDPOINT_SUFFIX: ${{ secrets.ENDPOINT_SUFFIX }}
+          HOST: 0.0.0.0
+          API_PORT: 8050
+          HOSTNAME: localhost
+          POSTGRES_PORT: 5434
+          POSTGRES_DB: test_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          API_USER_NAME: anthony
+          API_USER_PASSWORD: mysecret
           SHOW_COV_HTML: False
-      # - name: Upload coverage data to coveralls.io
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: coveralls
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./api/tests/test-logs/coverage.xml
+          env_vars: OS,PYTHON
+          name: codecov-umbrella
+          fail_ci_if_error: true
+          path_to_write_report: ./api/tests/test-logs/codecov_report.txt
+          verbose: true

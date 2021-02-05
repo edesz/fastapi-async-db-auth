@@ -44,7 +44,12 @@ def create_user(username, password_hash, host_port):
     assert r.status_code == 200
     response_dict = json.loads(r.text)
     assert list(response_dict) == ["access_token", "token_type"]
-    return response_dict
+
+    user_auth_headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"bearer {response_dict['access_token']}",
+    }
+    return user_auth_headers
 
 
 def get_dummy_url_data(dummy_data_filepath):

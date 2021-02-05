@@ -32,22 +32,13 @@ if __name__ == "__main__":
     dummy_data_filepath = os.path.join(PROJ_ROOT_DIR, "dummy_url_inputs.json")
     _, multi_obs_list = adl.get_dummy_url_data(dummy_data_filepath)
 
-    # Create user and Generate token
-    USERNAME = os.environ.get("USERNAME", "tom")
-    PASSWORD = os.environ.get("PASSWORD", "mythirdsecret")
-    response_dict = adl.create_user(USERNAME, PASSWORD, HOST_PORT)
-    # print(response_dict)
+    # Create user and retrieve headers with JWT for using with authenticated
+    # routes
+    API_USER_NAME = "tom"
+    API_USER_PASSWORD = "mythirdsecret"
+    headers = adl.create_user(API_USER_NAME, API_USER_PASSWORD, HOST_PORT)
 
-    token = {
-        "access_token": response_dict["access_token"],
-        "token_type": "bearer",
-    }
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"{token['token_type']} {token['access_token']}",
-    }
-
-    # Predict Species
+    # Add predictions to predictions table
     url = urljoin(f"{HOST_PORT}/api/v1/topics/", "predict").lower()
     r = requests.post(
         url,
@@ -57,9 +48,9 @@ if __name__ == "__main__":
     assert r.status_code == 200
     r_text = json.loads(r.text)
     assert list(r_text) == ["msg", "current_user"]
-    assert r_text["current_user"] == USERNAME
+    assert r_text["current_user"] == API_USER_NAME
 
-    # Read Predictions
+    # Read Predictions from predictions table
     url = urljoin(f"{HOST_PORT}/api/v1/topics/", "read_predictions").lower()
     r = requests.get(url, headers=headers)
     r_text = json.loads(r.text)
@@ -67,9 +58,9 @@ if __name__ == "__main__":
     assert len(r_text["msg"]) >= len(multi_obs_list)
     assert list(r_text) == ["msg", "current_user"]
     assert list(r_text["msg"][0].keys()) == ["id", "url", "text", "user_id"]
-    assert r_text["current_user"] == USERNAME
+    assert r_text["current_user"] == API_USER_NAME
 
-    # Read Prediction
+    # Read single prediction from predictions table
     url = urljoin(
         f"{HOST_PORT}/api/v1/topics/",
         f"read_prediction?url={multi_obs_list[0]['url']}",
@@ -79,15 +70,16 @@ if __name__ == "__main__":
     assert r.status_code == 200
     assert list(r_text) == ["msg", "current_user"]
     assert list(r_text["msg"].keys()) == ["id", "url", "text", "user_id"]
-    assert r_text["current_user"] == USERNAME
+    assert r_text["current_user"] == API_USER_NAME
 
-    # Verify response of /auths/users/me GET endpoint with authentication
+    # Verify response of authenticated /auths/users/me GET endpoint
     url = urljoin(f"{HOST_PORT}/api/v1/auths/users/", "me").lower()
     r = requests.get(url, headers=headers)
     assert r.status_code == 200
     assert list(json.loads(r.text)) == ["username", "password_hash"]
 
-    # Verify response of /auths/user/{user_id} GET endpoint with authentication
+    # Verify response of authenticated /auths/user/{user_id} GET endpoint
+    # - assumes a single user, not named tom, exists in the users table
     user_id = 2
     url = urljoin(f"{HOST_PORT}/api/v1/auths/user/", str(user_id)).lower()
     r = requests.get(url, headers=headers)
@@ -95,10 +87,10 @@ if __name__ == "__main__":
     r_text = json.loads(r.text)
     assert list(r_text) == ["msg", "current_user"]
     assert list(r_text["msg"]) == ["id", "username", "password_hash"]
-    assert r_text["msg"]["username"] == USERNAME
-    assert r_text["current_user"] == USERNAME
+    assert r_text["msg"]["username"] == API_USER_NAME
+    assert r_text["current_user"] == API_USER_NAME
 
-    # Verify response of /users GET endpoint with authentication
+    # Verify response of authenticated /users GET endpoint
     url = urljoin(f"{HOST_PORT}/api/v1/auths/", "users").lower()
     r = requests.get(url, headers=headers)
     r_text = json.loads(r.text)
@@ -106,4 +98,4 @@ if __name__ == "__main__":
     assert list(r_text) == ["msg", "current_user"]
     assert list(r_text["msg"][0].keys()) == ["id", "username", "password_hash"]
     assert len(r_text["msg"]) == user_id
-    assert r_text["current_user"] == USERNAME
+    assert r_text["current_user"] == API_USER_NAME

@@ -60,8 +60,9 @@ clean-tests:
 	@find ./api -type f -name "*.py[co]" -delete
 	@find ./api -type d -name "__pycache__" -delete
 	@find "api/tests/test-logs/htmlcov" -type f -delete
+	@rm -rf api/tests/test-logs/htmlcov
 	@find "api/tests/test-logs/" -type f -name "*report*" -delete
-	@rm -rf api/tests/test-logs/htmlcov api/.coverage
+	@rm -rf api/tests/test-logs/coverage.xml api/.coverage
 .PHONY: clean-tests
 
 ## Verify

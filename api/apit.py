@@ -6,12 +6,14 @@ import os
 from typing import Dict, List
 
 import jwt
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
-import app.schemas as sc
 import app.db as db
+import app.schemas as sc
 from app.router import api_router
 from auth.utils import authenticate_user, get_password_hash
 
@@ -21,6 +23,10 @@ Users = List[sc.DBUser]
 db.get_db()
 
 app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+templates = Jinja2Templates(directory="templates/")
 
 
 @app.on_event("startup")
@@ -37,8 +43,17 @@ app.include_router(api_router, prefix="/api/v1")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"])
 
 
+@app.get("/")
+async def home(request: Request):
+    context = {"request": request}
+    return templates.TemplateResponse("base.html", context=context)
+
+
 @app.post("/token")
 async def generate_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    """
+    Generate JWT, use it to authenticate user's password and return token.
+    """
     user_obj = await authenticate_user(form_data.username, form_data.password)
 
     if not user_obj:
@@ -54,6 +69,8 @@ async def generate_token(form_data: OAuth2PasswordRequestForm = Depends()):
 
 @app.post("/create_users", response_model=Dict)
 async def create_users(users: Users):
+    """Add user(s) to users table."""
+    # Check if username is already entered in users table
     user_records = []
     errors = []
     for _, user in enumerate(users):
@@ -76,6 +93,8 @@ async def create_users(users: Users):
             "Please change and re-register."
         )
         raise HTTPException(status_code=409, detail=duplicate_username_err)
+
+    # Add user(s) to users table
     await db.DBUser.create(user_records)
     new_usernames = [user["username"] for user in user_records]
     return {

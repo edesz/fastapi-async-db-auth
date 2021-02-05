@@ -19,6 +19,25 @@ This is a **minimal** [FastAPI](https://fastapi.tiangolo.com/) project, with `fa
 - OAuth2 with Password (and hashing), Bearer with JWT tokens (follows the [FastAPI authentication docs](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/#oauth2-with-password-and-hashing-bearer-with-jwt-tokens))
 
 ## [Usage](#usage)
+1. Clone this repo into the desired path eg. `$HOME/Downloads`
+   ```bash
+   $ git clone https://github.com/edesz/fastapi-async-db-auth.git $HOME/Downloads
+   ```
+2. Export environment variables
+   ```bash
+   # Gunicorn
+   $ HOST=0.0.0.0
+   $ API_PORT=8050
+   # PostgreSQL
+   $ export HOSTNAME=localhost
+   $ export POSTGRES_PORT=5434  # will be mapped to 5432 in postgres container
+   $ export POSTGRES_DB=test_db
+   $ export POSTGRES_USER=postgres
+   $ export POSTGRES_PASSWORD=postgres
+   # FastAPI User
+   $ export API_USER_NAME=anthony
+   $ export API_USER_PASSWORD=mysecret
+   ```
 
 ## [Features](#features)
 Included
@@ -32,15 +51,15 @@ Included
   - use `gunicorn` to manage `uvicorn` for a mixture of asynchronous Python and parallelism
   - api verification using Python `requests`
 - use `tox`, the `virtualenv` management CLI tool to isolate dependencies from systemwide Python packages
+- demo (basic) front-end starter (templates, static files)
 
 Not included
-- no support for a front end material (templates, static files - Bootstrap, Tailwind, CSS, etc.)
 - no support for [deployment of the API](https://fastapi.tiangolo.com/deployment/)
 - any other sophisticated features; it is up to you to chose how to implement your API
 - features specific to ML applications that prevent broader use of this project in other types of applications
 
 ## [Contributions](#contributions)
-Contributions to this project are most welcome via pull requests!
+Contributions to this project are welcome via pull requests!
 
 Just keep in mind that the goal of this project is to provide a fast method to start using FastAPI with databases and user-authentication. So, it is hoped that this project will remain a "minimal" one.
 
@@ -53,7 +72,7 @@ If you would like to make a change, you can run tests locally from the project's
 ```bash
 $ make tests
 ```
-in order to test the changes you've made.
+in order to test the changes you've made. Also, verify that the CI workflow (github actions) completes successfully.
 
 ## [Attributions](#attributions)
 This project is primarily based on
@@ -73,9 +92,8 @@ Other sources used were documentation for the following Python packages
 
 ## [Future Improvements](#future-improvements)
 A preliminary list of ideas to be added is shown below
-1. Add update and delete components of [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
-2. Add demo (basic) front-end HTML website
-3. Add [ReadTheDocs](https://readthedocs.org/) documentation
-4. Explore feasibility of including `docker-compose` to streamline management of database and api services
-5. Convert this repository into a [Python `cookiecutter`](https://cookiecutterreadthedocs.io/en/latest/), to allow for more customized re-use when starting new projects
-6. Offer basic deployment support for Azure, Heroku and others, via GitHub Actions
+1. Add *Update* and *Delete* components of [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) to `api/app/topics/routes.py`
+2. Add [ReadTheDocs](https://readthedocs.org/) documentation
+3. Explore feasibility of including `docker-compose` to streamline interaction between database and api
+4. Convert this repository into a [Python `cookiecutter`](https://cookiecutterreadthedocs.io/en/latest/), to allow for more customized re-use when starting new projects
+   - offer basic deployment support for Azure, Heroku and other platforms, via GitHub Actions workflow, based on `cookiecutter` input

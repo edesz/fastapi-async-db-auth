@@ -16,14 +16,20 @@ JWT_SECRET = os.environ.get("JWT_SECRET", "myjwtsecret")
 
 
 def verify_password(unhashed_password_hash, hashed_password_hash):
+    """
+    Check if unhashed password generates same hash as hashed version stored in
+    users table.
+    """
     return bcrypt.verify(unhashed_password_hash, hashed_password_hash)
 
 
 def get_password_hash(unhashed_password_hash):
+    """Hash an unhashed password."""
     return bcrypt.hash(unhashed_password_hash)
 
 
 def user_pydantic_from_sqlalchemy(db_user):
+    """Convert single SQLAlchemy model to Pydantic model."""
     creds_keys = ["username", "password_hash"]
     user_creds = dict(
         zip(
@@ -31,39 +37,30 @@ def user_pydantic_from_sqlalchemy(db_user):
             [db_user.get(cred_key) for cred_key in creds_keys],
         )
     )
-    # print(user_creds)
     db_user_pydantic = DBUser_Pydantic(**user_creds)
     return db_user_pydantic
 
 
 async def authenticate_user(username: str, password: str):
+    """Authenticate user's password against password in users table."""
     user = await DBUser.get_one_by_username(username=username)
     db_user_pydantic = user_pydantic_from_sqlalchemy(user)
-    # print(db_user_pydantic)
     if not username:
-        # print(1)
         return False, False
     if not verify_password(password, db_user_pydantic.password_hash):
-        # print(2)
         return False, False
-    # print(3)
     return db_user_pydantic
 
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
+    """Get currently logged in user as Pydantic model."""
     try:
         payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
-        # print(1, payload)
         db_user = await DBUser.get_one_by_username(payload.get("username"))
-        # print(2, db_user)
         db_user_pydantic = user_pydantic_from_sqlalchemy(db_user)
-        # print(3, db_user_pydantic)
     except:
-        # print(4)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid username or password",
         )
-        # print(5)
-
     return db_user_pydantic
