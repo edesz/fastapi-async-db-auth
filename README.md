@@ -18,6 +18,27 @@ This is a **minimal** [FastAPI](https://fastapi.tiangolo.com/) project, with `fa
 - alembic migrations, per Alembic docs ([configure](https://alembic.sqlalchemy.org/en/latest/tutorial.html), [auto-generate](https://alembic.sqlalchemy.org/en/latest/autogenerate.html#auto-generating-migrations))
 - OAuth2 with Password (and hashing), Bearer with JWT tokens (follows the [FastAPI authentication docs](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/#oauth2-with-password-and-hashing-bearer-with-jwt-tokens))
 
+## [Features](#features)
+Included
+- API using the [ASGI-based FastAPI](https://fastapi.tiangolo.com/advanced/middleware/#adding-asgi-middlewares) web framework to serve dummy [Machine Learning (ML)](https://en.wikipedia.org/wiki/Machine_learning) predictions
+- [PostgreSQL database](https://www.postgresql.org/) support to store records (ML predictions), with migrations facilitated via `alembic`
+- mock unit tests using [containerized Postgres database](https://hub.docker.com/_/postgres)
+- user-authentication with Oauth2 using password, bearer and JWT
+- `Makefile` with tasks to reproducibly run necessary tasks
+  - alembic migrations
+  - happypath unit tests
+  - use `gunicorn` to manage `uvicorn` for a mixture of asynchronous Python and parallelism
+  - api verification using Python `requests`
+- use `tox`, the `virtualenv` management CLI tool to
+  - isolate dependencies from systemwide Python packages
+  - run tests locally and in CI
+- demo (basic) front-end starter (templates, static files)
+
+Not included
+- no support for [deployment of the API](https://fastapi.tiangolo.com/deployment/)
+- any other sophisticated features; it is up to you to chose how to implement your API
+- features specific to ML applications that prevent broader use of this project in other types of applications
+
 ## [Usage](#usage)
 1. Clone this repo into the desired path eg. `$HOME/Downloads`
    ```bash
@@ -38,25 +59,6 @@ This is a **minimal** [FastAPI](https://fastapi.tiangolo.com/) project, with `fa
    $ export API_USER_NAME=anthony
    $ export API_USER_PASSWORD=mysecret
    ```
-
-## [Features](#features)
-Included
-- API using the [ASGI-based FastAPI](https://fastapi.tiangolo.com/advanced/middleware/#adding-asgi-middlewares) web framework to serve dummy [Machine Learning (ML)](https://en.wikipedia.org/wiki/Machine_learning) predictions
-- [PostgreSQL database](https://www.postgresql.org/) support to store records (ML predictions), with migrations facilitated via `alembic`
-- mock unit tests using [containerized Postgres database](https://hub.docker.com/_/postgres)
-- user-authentication with Oauth2 using password, bearer and JWT
-- `Makefile` with tasks to reproducibly run necessary tasks
-  - alembic migrations
-  - happypath unit tests
-  - use `gunicorn` to manage `uvicorn` for a mixture of asynchronous Python and parallelism
-  - api verification using Python `requests`
-- use `tox`, the `virtualenv` management CLI tool to isolate dependencies from systemwide Python packages
-- demo (basic) front-end starter (templates, static files)
-
-Not included
-- no support for [deployment of the API](https://fastapi.tiangolo.com/deployment/)
-- any other sophisticated features; it is up to you to chose how to implement your API
-- features specific to ML applications that prevent broader use of this project in other types of applications
 
 ## [Contributions](#contributions)
 Contributions to this project are welcome via pull requests!
