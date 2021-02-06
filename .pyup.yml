@@ -26,10 +26,13 @@ search: True
 # default: empty
 # allowed: list
 requirements:
-  - api/requirements.txt
+  - api/requirements.txt:
       # update all dependencies and pin them
       update: all
       pin: True
+  - api_verify/requirements.txt:
+      # don't update dependencies, use global 'pin' default
+      update: False
 
 # add a label to pull requests, default is not set
 # requires private repo permissions, even on public repos
