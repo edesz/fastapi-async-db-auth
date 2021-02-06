@@ -13,5 +13,5 @@ aiofiles
 jinja2
 fastapi
 uvicorn[standard]
-gunicorn
+gunicorn==20.0.4
 pandas
