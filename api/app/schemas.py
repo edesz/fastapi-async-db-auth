@@ -66,20 +66,3 @@ class PredictionRecord(BaseModel):
     url: HttpUrl
     text: str
     user_id: int
-
-
-# class NewsArticleUrl(BaseModel):
-#     url: HttpUrl
-
-#     @validator("url")
-#     def validate_url(cls, v):
-#         errors = []
-#         if "theguardian.com" not in v:
-#             errors.append("URL not from theguardian.com")
-#         if "https" not in v:
-#             errors.append("URL not HTTPs")
-#         assert not errors, f"{','.join(errors)}"
-#         return v
-
-#     class Config:
-#         use_enum_values = True

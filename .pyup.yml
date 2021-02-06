@@ -1,0 +1,17 @@
+update: all
+pin: True
+branch: master
+
+search: False
+
+# Specify requirement file
+requirements:
+    - api/requirements.txt:
+        # update all dependencies and pin them
+        update: all
+        pin: True
+
+# add a label to prs
+label_prs: empty
+
+close_prs: True
