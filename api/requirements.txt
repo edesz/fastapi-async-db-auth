@@ -6,8 +6,7 @@ asyncpg==0.21.0
 alembic==1.5.4
 python-multipart==0.0.5
 bcrypt==3.2.0
-passlib
-tortoise-orm==0.16.21
+passlib==1.7.4
 pyjwt==2.0.1
 aiofiles==0.6.0
 jinja2==2.11.3
