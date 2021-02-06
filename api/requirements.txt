@@ -4,7 +4,7 @@ psycopg2_binary
 databases[postgres]
 asyncpg
 alembic
-python-multipart
+python-multipart==0.0.5
 bcrypt
 passlib
 tortoise-orm
