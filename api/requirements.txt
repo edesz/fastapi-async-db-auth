@@ -5,7 +5,7 @@ databases[postgres]
 asyncpg
 alembic
 python-multipart
-bcrypt
+bcrypt==3.2.0
 passlib
 tortoise-orm
 pyjwt
