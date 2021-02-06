@@ -4,7 +4,7 @@ psycopg2_binary==2.8.6
 databases[postgres]==0.4.1
 asyncpg==0.21.0
 alembic==1.5.4
-python-multipart
+python-multipart==0.0.5
 bcrypt
 passlib
 tortoise-orm
