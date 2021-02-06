@@ -9,7 +9,7 @@ bcrypt==3.2.0
 passlib
 tortoise-orm==0.16.20
 pyjwt==2.0.1
-aiofiles
+aiofiles==0.6.0
 jinja2
 fastapi
 uvicorn[standard]
