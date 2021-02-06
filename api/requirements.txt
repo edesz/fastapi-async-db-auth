@@ -1,6 +1,6 @@
 sqlalchemy
 sqlalchemy-utils
-psycopg2_binary
+psycopg2_binary==2.8.6
 databases[postgres]
 asyncpg
 alembic
