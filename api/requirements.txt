@@ -8,7 +8,7 @@ python-multipart
 bcrypt
 passlib
 tortoise-orm
-pyjwt
+pyjwt==2.0.1
 aiofiles
 jinja2
 fastapi
