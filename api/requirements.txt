@@ -7,7 +7,7 @@ alembic
 python-multipart
 bcrypt
 passlib
-tortoise-orm
+tortoise-orm==0.16.21
 pyjwt
 aiofiles
 jinja2
