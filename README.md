@@ -92,7 +92,7 @@ Not included
    API_PORT=8050
    # PostgreSQL
    export HOSTNAME=localhost
-   export POSTGRES_PORT=5434  # (for tests) set to 5434 if using containerized postgres from docker-compose.yml
+   export POSTGRES_PORT=5434  # (for tests) set to 5434 per containerized postgres db in docker-compose.yml
    export POSTGRES_DB=test_db
    export POSTGRES_USER=postgres
    export POSTGRES_PASSWORD=postgres
