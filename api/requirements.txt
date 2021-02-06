@@ -10,7 +10,7 @@ passlib
 tortoise-orm==0.16.20
 pyjwt==2.0.1
 aiofiles==0.6.0
-jinja2
+jinja2==2.11.3
 fastapi
 uvicorn[standard]
 gunicorn
