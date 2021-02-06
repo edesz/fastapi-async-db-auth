@@ -3,7 +3,7 @@
 </div>
 
 <div align="center">
-  <a href="https://github.com/psf/black/blob/master/LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-brightgreen.svg"></a>
+  <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-brightgreen.svg"></a>
   <a href="https://github.com/edesz/fastapi-minimal-ml/pulls"><img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square"></a>
   <a href="https://github.com/edesz/fastapi-minimal-ml/actions">
     <img src="https://github.com/edesz/fastapi-minimal-ml/workflows/CI/badge.svg"/>
@@ -11,11 +11,13 @@
   <a href="https://github.com/edesz/fastapi-minimal-ml/actions">
     <img src="https://github.com/edesz/fastapi-minimal-ml/workflows/CodeQL/badge.svg"/>
   </a>
-  <a href="https://github.com/psf/black/blob/master/LICENSE"><img alt="Open Source?: Yes" src="https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github"></a>
-  <a href="https://codecov.io/gh/edesz/fastapi-minimal-ml">
+  <a href="https://en.wikipedia.org/wiki/Open-source_software"><img alt="Open Source?: Yes" src="https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github"></a>
+  <a href="https://pyup.io/repos/github/edesz/fastapi-minimal-ml/"><img src="https://pyup.io/repos/github/edesz/fastapi-minimal-ml/shield.svg" alt="Updates" /></a>
+</div>
+<div align="center">
+<a href="https://codecov.io/gh/edesz/fastapi-minimal-ml">
     <img src="https://codecov.io/gh/edesz/fastapi-minimal-ml/branch/main/graph/badge.svg?token=JYERV7HUHM"/>
   </a>
-  <a href="https://pyup.io/repos/github/edesz/fastapi-minimal-ml/"><img src="https://pyup.io/repos/github/edesz/fastapi-minimal-ml/shield.svg" alt="Updates" /></a>
   <a href="https://www.codacy.com/gh/edesz/fastapi-minimal-ml/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=edesz/fastapi-minimal-ml&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/cc6ccfd808304591a67917cbb48e4183"/></a>
 </div>
 
