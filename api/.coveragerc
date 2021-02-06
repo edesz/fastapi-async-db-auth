@@ -1,6 +1,5 @@
 # .coveragerc to control coverage.py
 [run]
-fail_under = 75.0
 source =
   app/
 omit =
@@ -19,6 +18,7 @@ directory = tests/test-logs/htmlcov
 output = tests/test-logs/coverage.xml
 
 [report]
+fail_under = 75.0
 # Regexes for lines to exclude from consideration
 exclude_lines =
     # Have to re-enable the standard pragma
