@@ -88,6 +88,7 @@ Not included
    ```
 
 ## [Contributions](#contributions)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ec8c29200824405e9b5fac048266dabd)](https://app.codacy.com/gh/edesz/fastapi-minimal-ml?utm_source=github.com&utm_medium=referral&utm_content=edesz/fastapi-minimal-ml&utm_campaign=Badge_Grade_Settings)
 [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=edesz&theme=blue-green&repo=fastapi-async-db-auth)](https://github.com/edesz/fastapi-async-db-auth)
 
 Contributions to this project are welcome via pull requests!
