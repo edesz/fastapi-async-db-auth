@@ -8,10 +8,10 @@ python-multipart==0.0.5
 bcrypt==3.2.0
 passlib
 tortoise-orm==0.16.21
-pyjwt
-aiofiles
-jinja2
-fastapi
-uvicorn[standard]
-gunicorn
+pyjwt==2.0.1
+aiofiles==0.6.0
+jinja2==2.11.3
+fastapi==0.63.0
+uvicorn[standard]==0.13.3
+gunicorn==20.0.4
 pandas
