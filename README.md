@@ -8,6 +8,9 @@
   <a href="https://github.com/edesz/fastapi-minimal-ml/actions">
     <img src="https://github.com/edesz/fastapi-minimal-ml/workflows/CI/badge.svg"/>
   </a>
+  <a href="https://github.com/edesz/fastapi-minimal-ml/actions">
+    <img src="https://github.com/edesz/fastapi-minimal-ml/workflows/CodeQL/badge.svg"/>
+  </a>
   <a href="https://github.com/psf/black/blob/master/LICENSE"><img alt="Open Source?: Yes" src="https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github"></a>
   <a href="https://codecov.io/gh/edesz/fastapi-minimal-ml">
     <img src="https://codecov.io/gh/edesz/fastapi-minimal-ml/branch/main/graph/badge.svg?token=JYERV7HUHM"/>
