@@ -1,5 +1,6 @@
 # .coveragerc to control coverage.py
 [run]
+fail_under = 75.0
 source =
   app/
 omit =
