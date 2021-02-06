@@ -20,17 +20,20 @@ api:
 
 ## Run alembic init
 alembic-init:
-	./run.sh "alembicinit"
+	# ./run.sh "alembicinit"
+	tox -e migrate -- init migrations
 .PHONY: alembic-init
 
 ## Run alembic autogenerate
 alembic-auto:
-	./run.sh "alembicauto"
+	# ./run.sh "alembicauto"
+	tox -e migrate -- revision --autogenerate -m "create user table"
 .PHONY: alembic-auto
 
 ## Run alembic migration
 alembic-migrate:
-	./run.sh "alembicmigrate"
+	# ./run.sh "alembicmigrate"
+	tox -e migrate -- upgrade head
 .PHONY: alembic-migrate
 
 ## Run tests
