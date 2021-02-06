@@ -14,4 +14,4 @@ jinja2
 fastapi
 uvicorn[standard]
 gunicorn
-pandas
+pandas==1.2.1
