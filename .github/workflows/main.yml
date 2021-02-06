@@ -18,15 +18,13 @@ jobs:
       - name: Run tests and Show test summary
         run: make tests
         env:
-          HOST: 0.0.0.0
-          API_PORT: 8050
           HOSTNAME: localhost
           POSTGRES_PORT: 5434
           POSTGRES_DB: test_db
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          API_USER_NAME: anthony
-          API_USER_PASSWORD: mysecret
+          API_USER_NAME: ${{ secrets.API_USER_NAME }}
+          API_USER_PASSWORD: ${{ secrets.API_USER_PASSWORD }}
           SHOW_COV_HTML: False
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1

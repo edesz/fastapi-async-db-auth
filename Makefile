@@ -1,14 +1,4 @@
 .DEFAULT_GOAL := api
-.EXPORT_ALL_VARIABLES:
-HOST=0.0.0.0
-API_PORT=8050
-HOSTNAME=localhost
-POSTGRES_PORT=5434
-POSTGRES_DB=test_db
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-API_USER_NAME=anthony
-API_USER_PASSWORD=mysecret
 
 ## Run API
 api:
@@ -18,22 +8,24 @@ api:
 	@tox -e api
 .PHONY: api
 
+## Create Database
+create-db:
+	tox -e manage-db -- 'CREATE'
+.PHONY: create-db
+
 ## Run alembic init
 alembic-init:
-	# ./run.sh "alembicinit"
-	tox -e migrate -- init migrations
+	tox -e alembic -- init migrations
 .PHONY: alembic-init
 
 ## Run alembic autogenerate
 alembic-auto:
-	# ./run.sh "alembicauto"
-	tox -e migrate -- revision --autogenerate -m "create user table"
+	tox -e alembic -- revision --autogenerate -m "create user table"
 .PHONY: alembic-auto
 
 ## Run alembic migration
 alembic-migrate:
-	# ./run.sh "alembicmigrate"
-	tox -e migrate -- upgrade head
+	tox -e alembic -- upgrade head
 .PHONY: alembic-migrate
 
 ## Run tests
@@ -45,6 +37,7 @@ run-tests:
 	@docker-compose down -v
 	@docker rmi postgres
 	@docker images
+	@docker volume ls
 .PHONY: run-tests
 
 ## Show test summary report(s)
@@ -72,6 +65,11 @@ clean-tests:
 verify:
 	tox -e verify
 .PHONY: verify
+
+## Delete Database
+delete-db:
+	tox -e manage-db -- 'DROP'
+.PHONY: delete-db
 
 list:
 	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$'
