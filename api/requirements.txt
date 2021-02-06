@@ -12,6 +12,6 @@ pyjwt==2.0.1
 aiofiles==0.6.0
 jinja2==2.11.3
 fastapi==0.63.0
-uvicorn[standard]
+uvicorn[standard]==0.13.3
 gunicorn
 pandas
