@@ -27,8 +27,7 @@ def test_app():
 
 @pytest.fixture
 def user_auth_headers(test_app, monkeypatch):
-    """
-    Return JWT-authentication request headers for authenticated routes.
+    """Return JWT-authentication request headers for authenticated routes.
 
     Parameters
     ----------

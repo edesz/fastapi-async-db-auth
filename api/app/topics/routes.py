@@ -46,7 +46,7 @@ async def create(
             errors.append(row["url"])
     try:
         assert not errors
-    except AssertionError as _:
+    except AssertionError:
         duplicate_prediction_err = (
             f"Attempting to re-create prediction for: [{','.join(errors)}] "
             "Please remove these and retry. To retrieve previously created "

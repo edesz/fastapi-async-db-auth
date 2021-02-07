@@ -32,12 +32,24 @@ def get_db():
 
 
 class DBPrediction:
+
     """
     Convenience methods for predictions table.
 
     Parameters
     ----------
     None
+
+    Methods
+    -------
+    get_one(id)
+        Gets single prediction from predictions table, by predictions id
+    get_all()
+        Gets all predictions from predictions table
+    create(notes)
+        Adds single or multiple predictions to predictions table
+    get_one_by_url(url)
+        Gets single prediction from predictions table, by prediction url
     """
 
     @classmethod
@@ -72,6 +84,17 @@ class DBUser:
     Parameters
     ----------
     None
+
+    Methods
+    -------
+    get_one(id)
+        Gets single user from users table, by user id
+    get_all()
+        Gets all users from users table
+    create(notes)
+        Adds single or multiple users to users table
+    get_one_by_username(username)
+        Gets single user from users table, by user name
     """
 
     @classmethod
