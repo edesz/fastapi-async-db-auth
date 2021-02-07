@@ -58,25 +58,34 @@ The database table and SQLAlchemy model are name based on using this project to 
 Included
 
 -   API using the [ASGI-based FastAPI](https://fastapi.tiangolo.com/advanced/middleware/#adding-asgi-middlewares) web framework to serve ML predictions
+
 -   [PostgreSQL database](https://www.postgresql.org/) support to store records (ML predictions), with migrations facilitated via `alembic`
+
 -   async operations on database using the [`encode/databases`](https://www.encode.io/databases/) package in Python
+
 -   mock unit tests using [containerized Postgres database](https://hub.docker.com/_/postgres)
+
 -   user-authentication with Oauth2 using password, bearer and JWT required in order to post new records (predictions) to the database table
     -   a separate table is created to keep track of registered users
-- `Makefile` with tasks to reproducibly run necessary tasks
-  -   alembic migrations
-  -   happypath unit tests
-  -   use `gunicorn` to manage `uvicorn` for a mixture of asynchronous Python and parallelism, when instantiating the API
-  -   api route verification using Python `requests`
+
+-   `Makefile` with tasks to reproducibly run necessary tasks
+    -   alembic migrations
+    -   happypath unit tests
+    -   use `gunicorn` to manage `uvicorn` for a mixture of asynchronous Python and parallelism, when instantiating the API
+    -   api route verification using Python `requests`
+
 -   use `tox`, the `virtualenv` management CLI tool to
     -   isolate dependencies from systemwide Python packages
     -   run tests locally and in CI
     -   **all python code runs through a `tox` environment**, to ensure reproducibility
+
 -   demo (basic) HTML content (templates, static files)
 
 Not included
 -   support for [deployment of the API](https://fastapi.tiangolo.com/deployment/)
+
 -   any other sophisticated features; it is up to you to chose how to further implement your API beyond the basic database operations supported by this project
+
 -   features specific to ML use-cases, that might prevent use of this project in other types of applications
     -   a few comments are added throughout the code in places where ML-specific components may be added but, since this is a minimal project, such code comments have been kept to a minimum and it is the user's responsibility to add these in as required
 
@@ -149,7 +158,10 @@ as well as [documentation for Python projects using Github Actions](https://docs
 A preliminary list of functionality to be implemented is shown below
 
 1.  Add *Update* and *Delete* components of [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) to `api/app/topics/routes.py`
+
 2.  Add [ReadTheDocs](https://readthedocs.org/) documentation
+
 3.  Explore feasibility of including `docker-compose` to streamline interaction between the database and the front-end
+
 4.  Convert this repository into a [Python `cookiecutter`](https://cookiecutterreadthedocs.io/en/latest/), to allow for more customized re-use when starting new projects
     -   offer basic deployment support for Azure, Heroku and other platforms, via GitHub Actions workflow, based on user specification in `cookiecutter` input
