@@ -7,9 +7,7 @@ from pydantic import BaseModel, HttpUrl, constr, validator
 
 
 class NewsArticle(BaseModel):
-
-    """
-    Pydantic model to parse & validate news article input from user.
+    """Pydantic model to parse & validate news article input from user.
 
     Parameters
     ----------
@@ -31,7 +29,8 @@ class NewsArticle(BaseModel):
 
     @validator("url")
     def validate_url(cls, v):
-        """Validates news article URL.
+        """
+        Validates news article URL.
 
         Parameters
         ----------
@@ -47,7 +46,8 @@ class NewsArticle(BaseModel):
         return v
 
     def to_df(self):
-        """Convert dict to pandas dataframe with single row.
+        """
+        Convert dict to pandas dataframe with single row.
 
         Parameters
         ----------
