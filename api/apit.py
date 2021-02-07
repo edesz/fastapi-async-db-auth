@@ -85,7 +85,7 @@ async def create_users(users: Users):
             )
     try:
         assert not errors
-    except AssertionError as _:
+    except AssertionError:
         duplicate_username_err = (
             f"Usernames [{','.join(errors)}] not available. "
             "Please change and re-register."

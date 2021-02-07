@@ -111,6 +111,13 @@ Not included
     export API_USER_PASSWORD=<password>
     ```
 
+## Verification
+1. Export environment variables
+   ```bash
+   # FastAPI User
+   export API_USER_NAME=<usrename_for_new_user>
+   export API_NEW_USER_PASSWORD=<password_for_new_user>
+
 ## [Contributions](#contributions)
 [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=edesz&theme=blue-green&repo=fastapi-minimal-ml)](https://github.com/edesz/fastapi-minimal-ml)
 

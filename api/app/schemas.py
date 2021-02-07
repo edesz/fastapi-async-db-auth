@@ -10,7 +10,7 @@ class NewsArticle(BaseModel):
     """
     Pydantic model to parse & validate news article input from user.
 
-    Attributes
+    Parameters
     ----------
     url : HttpUrl
         valid url of news article
@@ -36,7 +36,13 @@ class NewsArticle(BaseModel):
         return pd.DataFrame.from_dict(dict(self), orient="index").T
 
     class Config:
-        """Check that valid Enum instances are used."""
+        """
+        Check that valid Enum instances are used.
+
+        Parameters
+        ----------
+        None
+        """
 
         use_enum_values = True
 
@@ -45,7 +51,7 @@ class DBUser(BaseModel):
     """
     Pydantic model to parse & validate user.
 
-    Attributes
+    Parameters
     ----------
     username : str
         name for user
@@ -57,7 +63,13 @@ class DBUser(BaseModel):
     password_hash: constr(strip_whitespace=True, min_length=5)
 
     class Config:
-        """Check that valid Enum instances are used."""
+        """
+        Check that valid Enum instances are used.
+
+        Parameters
+        ----------
+        None
+        """
 
         use_enum_values = True
 
@@ -66,7 +78,7 @@ class DBUserRecord(BaseModel):
     """
     Pydantic model to parse & validate user record from database.
 
-    Attributes
+    Parameters
     ----------
     id : int
         user id
@@ -81,7 +93,13 @@ class DBUserRecord(BaseModel):
     password_hash: constr(strip_whitespace=True, min_length=5)
 
     class Config:
-        """Check that valid Enum instances are used."""
+        """
+        Check that valid Enum instances are used.
+
+        Parameters
+        ----------
+        None
+        """
 
         use_enum_values = True
 
@@ -90,7 +108,7 @@ class DBPredictionRecord(BaseModel):
     """
     Pydantic model to parse & validate prediction from database.
 
-    Attributes
+    Parameters
     ----------
     id : int
         user id
@@ -112,7 +130,7 @@ class PredictionRecord(BaseModel):
     """
     Pydantic model to parse & validate prediction.
 
-    Attributes
+    Parameters
     ----------
     url : HttpUrl
         valid url of news article

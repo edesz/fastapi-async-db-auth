@@ -5,6 +5,7 @@
 """Verification of handling valid requests."""
 
 
+import os
 import json
 import logging
 import os
@@ -23,10 +24,13 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format=log_fmt)
 
     ENV_PORT = int(os.environ.get("PORT", 8050))
-    # SERVICE_NAME = os.environ.get("SERVICE_NAME", "api-db")  # inside container
-    HOST_URL = "0.0.0.0"
-    HOST_PORT = f"http://{HOST_URL}:{ENV_PORT}"  # local
-    # HOST_PORT = f"http://{SERVICE_NAME}:{ENV_PORT}"  # inside container
+    # # inside container
+    # SERVICE_NAME = os.environ.get("SERVICE_NAME", "api-db")
+    HOST_URL = os.getenv("HOST")
+    # not inside container
+    HOST_PORT = f"http://{HOST_URL}:{ENV_PORT}"
+    # # inside container
+    # HOST_PORT = f"http://{SERVICE_NAME}:{ENV_PORT}"
 
     PROJ_ROOT_DIR = os.path.abspath(os.getcwd())
     dummy_data_filepath = os.path.join(PROJ_ROOT_DIR, "dummy_url_inputs.json")
@@ -34,8 +38,8 @@ if __name__ == "__main__":
 
     # Create user and retrieve headers with JWT for using with authenticated
     # routes
-    API_USER_NAME = "tom"
-    API_USER_PASSWORD = "mythirdsecret"
+    API_USER_NAME = os.getenv("API_NEW_USER_NAME")
+    API_USER_PASSWORD = os.getenv("API_NEW_USER_PASSWORD")
     headers = adl.create_user(API_USER_NAME, API_USER_PASSWORD, HOST_PORT)
 
     # Add predictions to predictions table

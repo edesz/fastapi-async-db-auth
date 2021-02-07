@@ -27,11 +27,15 @@ def test_app():
 
 @pytest.fixture
 def user_auth_headers(test_app, monkeypatch):
-    """Return JWT-authentication request headers for authenticated routes
+    """
+    Return JWT-authentication request headers for authenticated routes.
 
-    Mock the existence of single user record in users table.
-    Authenticate user's password using JWT.
-    Return header with JWT for use in authenticated routes.
+    Parameters
+    ----------
+    test_app : fastapi.app
+        fastapi app object
+    monkeypatch : _pytest.monkeypatch
+        fixture to mock single-user existence, authenticate and return header
     """
 
     # Mock existence of single user in users table
@@ -80,9 +84,18 @@ def get_duplicate_user_by_username(monkeypatch):
         """
         Return user whose username is already in the users table.
 
-        Returning None means there is no matching user in the users table.
+        Attributes
+        ----------
+        username : str
+            name for user
+
+        Returns
+        -------
+        user : dict
+            databases object, None means no matching user in users table
         """
-        return None
+        database_user = None
+        return database_user
 
     @classmethod
     async def mock_create(cls, notes):
