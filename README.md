@@ -56,6 +56,7 @@ The database table and SQLAlchemy model are name based on using this project to 
 
 ## [Features](#features)
 Included
+
 -   API using the [ASGI-based FastAPI](https://fastapi.tiangolo.com/advanced/middleware/#adding-asgi-middlewares) web framework to serve ML predictions
 -   [PostgreSQL database](https://www.postgresql.org/) support to store records (ML predictions), with migrations facilitated via `alembic`
 -   async operations on database using the [`encode/databases`](https://www.encode.io/databases/) package in Python
@@ -122,16 +123,18 @@ in order to verify that the changes you've made don't result in failing tests.
 
 ## [Attributions](#attributions)
 This project is primarily based on
+
 -   authentication
     -   the section from the FastAPI documentation on [OAuth2 with password, bearer and json web token](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/)
     -   [prettyprinted project](https://github.com/PrettyPrinted/youtube_video_code/blob/master/2021/01/05/FastAPI%20Authentication%20Example%20With%20OAuth2%20and%20Tortoise%20ORM/fastapiauth/main.py)
-- database operations
-  -   FastAPI documentation on [async databases](https://fastapi.tiangolo.com/advanced/async-sql-databases/#async-sql-relational-databases)
-  -   (for SQLAlchemy model classes) the [`ahmednafies/fastapi_async_db`](https://github.com/ahmednafies/fastapi_async_db) project
+-   database operations
+    -   FastAPI documentation on [async databases](https://fastapi.tiangolo.com/advanced/async-sql-databases/#async-sql-relational-databases)
+    -   (for SQLAlchemy model classes) the [`ahmednafies/fastapi_async_db`](https://github.com/ahmednafies/fastapi_async_db) project
 -   Unit tests
     -   FastAPI documentation for [testing](https://fastapi.tiangolo.com/tutorial/testing/)
 
 Other sources that were used are documentation for the following Python packages
+
 -   [FastAPI](https://fastapi.tiangolo.com/)
 -   [Alembic](https://alembic.sqlalchemy.org/en/latest/tutorial.html#tutorial)
 -   [SQLAlchemy](https://docs.sqlalchemy.org/en/14/index.html)
@@ -144,6 +147,7 @@ as well as [documentation for Python projects using Github Actions](https://docs
 
 ## [Future Improvements](#future-improvements)
 A preliminary list of functionality to be implemented is shown below
+
 1.  Add *Update* and *Delete* components of [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) to `api/app/topics/routes.py`
 2.  Add [ReadTheDocs](https://readthedocs.org/) documentation
 3.  Explore feasibility of including `docker-compose` to streamline interaction between the database and the front-end
