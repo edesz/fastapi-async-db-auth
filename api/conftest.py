@@ -27,7 +27,7 @@ def test_app():
 
 @pytest.fixture
 def user_auth_headers(test_app, monkeypatch):
-    """
+    """Return JWT-authentication request headers for authenticated routes
 
     Mock the existence of single user record in users table.
     Authenticate user's password using JWT.

@@ -24,7 +24,7 @@ def test_root(test_app):
 def test_docs_redirect(test_app):
     """Test documentation route."""
     response = test_app.get("/docs")
-    assert type(response.history) == list
+    assert isinstance(response.history, list)
     assert len(response.history) == 0
     assert response.status_code == 200
     assert response.url == "http://testserver/docs"
