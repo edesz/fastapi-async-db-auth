@@ -37,7 +37,6 @@ def user_auth_headers(test_app, monkeypatch):
     monkeypatch : _pytest.monkeypatch
         fixture to mock single-user existence, authenticate and return header
     """
-
     # Mock existence of single user in users table
     @classmethod
     async def mock_get_one_by_username(cls, username):

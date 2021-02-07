@@ -5,7 +5,6 @@
 """Verification of handling valid requests."""
 
 
-import os
 import json
 import logging
 import os

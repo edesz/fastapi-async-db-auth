@@ -32,7 +32,13 @@ def get_db():
 
 
 class DBPrediction:
-    """Convenience methods for predictions table."""
+    """
+    Convenience methods for predictions table.
+
+    Parameters
+    ----------
+    None
+    """
 
     @classmethod
     async def get_one(cls, id):
@@ -60,7 +66,13 @@ class DBPrediction:
 
 
 class DBUser:
-    """Convenience methods for users table."""
+    """
+    Convenience methods for users table.
+
+    Parameters
+    ----------
+    None
+    """
 
     @classmethod
     async def get_one(cls, id):
