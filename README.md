@@ -84,6 +84,7 @@ Not included
     ```bash
     git clone https://github.com/edesz/fastapi-minimal-ml.git $HOME/Downloads
     ```
+
 2.  Export environment variables
     ```bash
     # Gunicorn
@@ -116,6 +117,7 @@ If you would like to make a change via a pull request, you can use the `Makefile
 ```bash
 make tests
 ```
+
 in order to verify that the changes you've made don't result in failing tests.
 
 ## [Attributions](#attributions)
