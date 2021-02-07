@@ -80,25 +80,25 @@ Not included
     -   a few comments are added throughout the code in places where ML-specific components may be added but, since this is a minimal project, such code comments have been kept to a minimum and it is the user's responsibility to add these in as required
 
 ## [Usage](#usage)
-1. Clone this repo into the desired path eg. `$HOME/Downloads`
-   ```bash
-   git clone https://github.com/edesz/fastapi-minimal-ml.git $HOME/Downloads
-   ```
-2. Export environment variables
-   ```bash
-   # Gunicorn
-   HOST=0.0.0.0
-   API_PORT=8050
-   # PostgreSQL
-   export HOSTNAME=localhost
-   export POSTGRES_PORT=5434  # (tests) set to 5434 for containerized postgres in docker-compose.yml
-   export POSTGRES_DB=test_db
-   export POSTGRES_USER=postgres
-   export POSTGRES_PASSWORD=postgres
-   # FastAPI User
-   export API_USER_NAME=<username>
-   export API_USER_PASSWORD=<password>
-   ```
+1.  Clone this repo into the desired path eg. `$HOME/Downloads`
+    ```bash
+    git clone https://github.com/edesz/fastapi-minimal-ml.git $HOME/Downloads
+    ```
+2.  Export environment variables
+    ```bash
+    # Gunicorn
+    HOST=0.0.0.0
+    API_PORT=8050
+    # PostgreSQL
+    export HOSTNAME=localhost
+    export POSTGRES_PORT=5434  # (tests) set to 5434 for containerized postgres in docker-compose.yml
+    export POSTGRES_DB=test_db
+    export POSTGRES_USER=postgres
+    export POSTGRES_PASSWORD=postgres
+    # FastAPI User
+    export API_USER_NAME=<username>
+    export API_USER_PASSWORD=<password>
+    ```
 
 ## [Contributions](#contributions)
 [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=edesz&theme=blue-green&repo=fastapi-minimal-ml)](https://github.com/edesz/fastapi-minimal-ml)
@@ -142,8 +142,8 @@ as well as [documentation for Python projects using Github Actions](https://docs
 
 ## [Future Improvements](#future-improvements)
 A preliminary list of functionality to be implemented is shown below
-1.   Add *Update* and *Delete* components of [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) to `api/app/topics/routes.py`
-2.   Add [ReadTheDocs](https://readthedocs.org/) documentation
-3.   Explore feasibility of including `docker-compose` to streamline interaction between the database and the front-end
+1.  Add *Update* and *Delete* components of [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) to `api/app/topics/routes.py`
+2.  Add [ReadTheDocs](https://readthedocs.org/) documentation
+3.  Explore feasibility of including `docker-compose` to streamline interaction between the database and the front-end
 4.  Convert this repository into a [Python `cookiecutter`](https://cookiecutterreadthedocs.io/en/latest/), to allow for more customized re-use when starting new projects
     -   offer basic deployment support for Azure, Heroku and other platforms, via GitHub Actions workflow, based on user specification in `cookiecutter` input
