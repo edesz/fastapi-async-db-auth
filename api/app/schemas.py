@@ -7,6 +7,7 @@ from pydantic import BaseModel, HttpUrl, constr, validator
 
 
 class NewsArticle(BaseModel):
+
     """Pydantic model to parse & validate news article input from user."""
 
     url: HttpUrl
@@ -31,6 +32,7 @@ class NewsArticle(BaseModel):
 
 
 class DBUser(BaseModel):
+
     """Pydantic model to parse & validate user."""
 
     username: str
@@ -41,6 +43,7 @@ class DBUser(BaseModel):
 
 
 class DBUserRecord(BaseModel):
+
     """Pydantic model to parse & validate user record from database."""
 
     id: int
@@ -52,6 +55,7 @@ class DBUserRecord(BaseModel):
 
 
 class DBPredictionRecord(BaseModel):
+
     """Pydantic model to parse & validate prediction from database."""
 
     id: int
@@ -61,6 +65,7 @@ class DBPredictionRecord(BaseModel):
 
 
 class PredictionRecord(BaseModel):
+
     """Pydantic model to parse & validate prediction."""
 
     url: HttpUrl

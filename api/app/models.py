@@ -3,7 +3,7 @@
 
 
 import sqlalchemy
-from sqlalchemy_utils import PasswordType, URLType
+from sqlalchemy_utils import URLType
 
 metadata = sqlalchemy.MetaData()
 

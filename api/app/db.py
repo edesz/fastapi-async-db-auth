@@ -32,6 +32,9 @@ def get_db():
 
 
 class DBPrediction:
+
+    """Convenience methods for predictions table."""
+
     @classmethod
     async def get_one(cls, id):
         query = predictions.select().where(predictions.c.id == id)
@@ -58,6 +61,9 @@ class DBPrediction:
 
 
 class DBUser:
+
+    """Convenience methods for users table."""
+
     @classmethod
     async def get_one(cls, id):
         query = users.select().where(users.c.id == id)
