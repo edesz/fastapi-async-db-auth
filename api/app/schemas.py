@@ -7,7 +7,16 @@ from pydantic import BaseModel, HttpUrl, constr, validator
 
 
 class NewsArticle(BaseModel):
-    """Pydantic model to parse & validate news article input from user."""
+    """
+    Pydantic model to parse & validate news article input from user.
+
+    Attributes
+    ----------
+    url : HttpUrl
+        valid url of news article
+    text : constr
+        news article text
+    """
 
     url: HttpUrl
     text: constr(min_length=20)
@@ -33,7 +42,16 @@ class NewsArticle(BaseModel):
 
 
 class DBUser(BaseModel):
-    """Pydantic model to parse & validate user."""
+    """
+    Pydantic model to parse & validate user.
+
+    Attributes
+    ----------
+    username : str
+        name for user
+    password_hash : constr
+        password for user
+    """
 
     username: str
     password_hash: constr(strip_whitespace=True, min_length=5)
@@ -45,7 +63,18 @@ class DBUser(BaseModel):
 
 
 class DBUserRecord(BaseModel):
-    """Pydantic model to parse & validate user record from database."""
+    """
+    Pydantic model to parse & validate user record from database.
+
+    Attributes
+    ----------
+    id : int
+        user id
+    username : str
+        name for user
+    text : constr
+        password for user
+    """
 
     id: int
     username: str
@@ -58,7 +87,20 @@ class DBUserRecord(BaseModel):
 
 
 class DBPredictionRecord(BaseModel):
-    """Pydantic model to parse & validate prediction from database."""
+    """
+    Pydantic model to parse & validate prediction from database.
+
+    Attributes
+    ----------
+    id : int
+        user id
+    url : HttpUrl
+        valid url of news article
+    text : constr
+        news article text
+    user_id : int
+        id of user who entered record (prediction) into predictions table
+    """
 
     id: int
     url: HttpUrl
@@ -67,7 +109,18 @@ class DBPredictionRecord(BaseModel):
 
 
 class PredictionRecord(BaseModel):
-    """Pydantic model to parse & validate prediction."""
+    """
+    Pydantic model to parse & validate prediction.
+
+    Attributes
+    ----------
+    url : HttpUrl
+        valid url of news article
+    text : constr
+        news article text
+    user_id : int
+        id of user who entered record (prediction) into predictions table
+    """
 
     url: HttpUrl
     text: str
