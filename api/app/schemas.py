@@ -17,6 +17,13 @@ class NewsArticle(BaseModel):
         valid url of news article
     text : constr
         news article text
+
+    Methods
+    -------
+    validate_url(v)
+        Verifies URL
+    to_df()
+        Gets single-row pandas DataFrame from dictionary
     """
 
     url: HttpUrl
@@ -24,6 +31,13 @@ class NewsArticle(BaseModel):
 
     @validator("url")
     def validate_url(cls, v):
+        """Validates news article URL.
+
+        Parameters
+        ----------
+        v : HttpUrl
+            URL of new article
+        """
         errors = []
         if "theguardian.com" not in v:
             errors.append("URL not from theguardian.com")
@@ -33,7 +47,12 @@ class NewsArticle(BaseModel):
         return v
 
     def to_df(self):
-        """Convert to pandas dataframe with 1 or more rows."""
+        """Convert dict to pandas dataframe with single row.
+
+        Parameters
+        ----------
+        None
+        """
         return pd.DataFrame.from_dict(dict(self), orient="index").T
 
     class Config:
