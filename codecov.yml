@@ -1,0 +1,3 @@
+coverage:
+fixes:
+  - "api/app/db.py::fastapi-minimal-ml/api/app/db.py"
