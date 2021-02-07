@@ -7,7 +7,8 @@ from pydantic import BaseModel, HttpUrl, constr, validator
 
 
 class NewsArticle(BaseModel):
-    """Pydantic model to parse & validate news article input from user.
+    """
+    Pydantic model to parse & validate news article input from user.
 
     Parameters
     ----------

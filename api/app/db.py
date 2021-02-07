@@ -32,7 +32,8 @@ def get_db():
 
 
 class DBPrediction:
-    """Convenience methods for predictions table.
+    """
+    Convenience methods for predictions table.
 
     Parameters
     ----------
