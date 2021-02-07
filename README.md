@@ -38,12 +38,12 @@
 </div>
 
 ## [Table of Contents](#table-of-contents)
-   -   [About](#about)
-   -   [Usage](#usage)
-   -   [Features](#features)
-   -   [Contributions](#contributions)
-   -   [Attributions](#attributions)
-   -   [Future Improvements](#future-improvements)
+-   [About](#about)
+-   [Usage](#usage)
+-   [Features](#features)
+-   [Contributions](#contributions)
+-   [Attributions](#attributions)
+-   [Future Improvements](#future-improvements)
 
 ## [About](#about)
 This is a **minimal** [FastAPI](https://fastapi.tiangolo.com/) project, with the python -based web-framework `fastapi` and external dependencies to facilitate use of a postgres database (controlled by `sqlalchemy` and requiring user authentication) and unit tests (mocking database access, when required) to start using FastAPI with
@@ -57,9 +57,9 @@ The database table and SQLAlchemy model are name based on using this project to 
 ## [Features](#features)
 Included
 -   API using the [ASGI-based FastAPI](https://fastapi.tiangolo.com/advanced/middleware/#adding-asgi-middlewares) web framework to serve ML predictions
-- [PostgreSQL database](https://www.postgresql.org/) support to store records (ML predictions), with migrations facilitated via `alembic`
-- async operations on database using the [`encode/databases`](https://www.encode.io/databases/) package in Python
-- mock unit tests using [containerized Postgres database](https://hub.docker.com/_/postgres)
+-   [PostgreSQL database](https://www.postgresql.org/) support to store records (ML predictions), with migrations facilitated via `alembic`
+-   async operations on database using the [`encode/databases`](https://www.encode.io/databases/) package in Python
+-   mock unit tests using [containerized Postgres database](https://hub.docker.com/_/postgres)
 -   user-authentication with Oauth2 using password, bearer and JWT required in order to post new records (predictions) to the database table
     -   a separate table is created to keep track of registered users
 - `Makefile` with tasks to reproducibly run necessary tasks
