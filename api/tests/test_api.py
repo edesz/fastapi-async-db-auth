@@ -14,7 +14,7 @@ API_USER_NAME = os.environ.get("API_USER_NAME")
 def test_root(test_app):
     """Test root."""
     response = test_app.get("/")
-    assert type(response.history) == list
+    assert isinstance(response.history, list)
     assert len(response.history) == 0
     assert response.status_code == 200
     assert response.url == "http://testserver/"

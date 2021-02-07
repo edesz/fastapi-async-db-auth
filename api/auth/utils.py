@@ -16,10 +16,7 @@ JWT_SECRET = os.environ.get("JWT_SECRET", "myjwtsecret")
 
 
 def verify_password(unhashed_password_hash, hashed_password_hash):
-    """
-    Check if unhashed password generates same hash as hashed version stored in
-    users table.
-    """
+    """Check if unhashed password gives same hash as hashed version."""
     return bcrypt.verify(unhashed_password_hash, hashed_password_hash)
 
 

@@ -51,9 +51,7 @@ async def home(request: Request):
 
 @app.post("/token")
 async def generate_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    """
-    Generate JWT, use it to authenticate user's password and return token.
-    """
+    """Generate JWT, use to authenticate user's password and return token."""
     user_obj = await authenticate_user(form_data.username, form_data.password)
 
     if not user_obj:

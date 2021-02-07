@@ -32,7 +32,6 @@ def get_db():
 
 
 class DBPrediction:
-
     """Convenience methods for predictions table."""
 
     @classmethod
@@ -61,7 +60,6 @@ class DBPrediction:
 
 
 class DBUser:
-
     """Convenience methods for users table."""
 
     @classmethod
