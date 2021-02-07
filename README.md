@@ -136,9 +136,11 @@ This project is primarily based on
 -   authentication
     -   the section from the FastAPI documentation on [OAuth2 with password, bearer and json web token](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/)
     -   [prettyprinted project](https://github.com/PrettyPrinted/youtube_video_code/blob/master/2021/01/05/FastAPI%20Authentication%20Example%20With%20OAuth2%20and%20Tortoise%20ORM/fastapiauth/main.py)
+
 -   database operations
     -   FastAPI documentation on [async databases](https://fastapi.tiangolo.com/advanced/async-sql-databases/#async-sql-relational-databases)
     -   (for SQLAlchemy model classes) the [`ahmednafies/fastapi_async_db`](https://github.com/ahmednafies/fastapi_async_db) project
+
 -   Unit tests
     -   FastAPI documentation for [testing](https://fastapi.tiangolo.com/tutorial/testing/)
 
