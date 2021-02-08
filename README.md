@@ -97,16 +97,16 @@ Not included
 
 2.  Export environment variables
     ```bash
-    # Gunicorn
-    HOST=0.0.0.0
-    API_PORT=8050
-    # PostgreSQL
+    # Gunicorn (not needed for tests, needed for verify)
+    export HOST=0.0.0.0
+    export API_PORT=8050
+    # PostgreSQL (needed for tests, verify)
     export HOSTNAME=localhost
-    export POSTGRES_PORT=5434  # (tests) set to 5434 for containerized postgres in docker-compose.yml
+    export POSTGRES_PORT=5434  # for tests, use 5434 (per line 14 in docker-compose.yml); for verify, use 5432
     export POSTGRES_DB=test_db
     export POSTGRES_USER=postgres
     export POSTGRES_PASSWORD=postgres
-    # FastAPI User
+    # FastAPI User (needed for tests, verify)
     export API_USER_NAME=<username>
     export API_USER_PASSWORD=<password>
     ```
@@ -114,8 +114,8 @@ Not included
 ## Verification
 1.  Export environment variables
     ```bash
-    # FastAPI User
-    export API_USER_NAME=<usrename_for_new_user>
+    # FastAPI User (not needed for tests, needed for verify)
+    export API_NEW_USER_NAME=<usrename_for_new_user>
     export API_NEW_USER_PASSWORD=<password_for_new_user>
     ```
 

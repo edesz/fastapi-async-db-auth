@@ -50,7 +50,9 @@ if __name__ == "__main__":
     )
     assert r.status_code == 200
     r_text = json.loads(r.text)
-    assert list(r_text) == ["msg", "current_user"]
+    returned_keys = ["msg", "duplicate_urls_ignored", "current_user"]
+    # assert list(r_text) == returned_keys
+    assert list(r_text.keys()) == returned_keys
     assert r_text["current_user"] == API_USER_NAME
 
     # Read Predictions from predictions table

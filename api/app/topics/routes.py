@@ -39,42 +39,36 @@ async def create(
     assert df_method1.equals(df_method2)
 
     # Check if prediction is already entered in predictions table
-    errors = []
-    for _, row in df_method1.iterrows():
+    duplicate_url_rows = {}
+    for row_index, row in df_method1.iterrows():
         db_prediction = await DBPrediction.get_one_by_url(row["url"])
         if db_prediction:
-            errors.append(row["url"])
-    try:
-        assert not errors
-    except AssertionError:
-        duplicate_prediction_err = (
-            f"Attempting to re-create prediction for: [{','.join(errors)}] "
-            "Please remove these and retry. To retrieve previously created "
-            "predictions, see /topics/read_predictions?url=..."
-        )
-        raise HTTPException(status_code=409, detail=duplicate_prediction_err)
-    else:
-        ### Add topic prediction columns to DataFrame, if required - START ###
-        #
-        ### Add topic prediction columns to DataFrame, if required - END ###
+            duplicate_url_rows[row_index] = row["url"]
+    # Drop duplicate predictions from user input
+    df_method1 = df_method1.drop(
+        df_method1.index[list(duplicate_url_rows.keys())]
+    )
 
-        # Get current user by username
-        db_user = await DBUser.get_one_by_username(username=user.username)
-        # Extract user's user_id
-        db_user_id = db_user.get("id")
-        # Add column with current user's user_id to DataFrame
-        df_predictions = df_method1.assign(
-            user_id=[db_user_id] * len(df_method1)
-        )
+    ### Add topic prediction columns to DataFrame, if required - START ###
+    #
+    ### Add topic prediction columns to DataFrame, if required - END ###
 
-        # Convert DataFrame to list of dicts
-        df_predictions = df_predictions.to_dict("records")
-        # Add list of dicts to predictions table
-        await DBPrediction.create(df_predictions)
-        return {
-            "msg": df_predictions,
-            "current_user": user.username,
-        }
+    # Get current user by username
+    db_user = await DBUser.get_one_by_username(username=user.username)
+    # Extract user's user_id
+    db_user_id = db_user.get("id")
+    # Add column with current user's user_id to DataFrame
+    df_predictions = df_method1.assign(user_id=[db_user_id] * len(df_method1))
+
+    # Convert DataFrame to list of dicts
+    df_predictions = df_predictions.to_dict("records")
+    # Add list of dicts to predictions table
+    await DBPrediction.create(df_predictions)
+    return {
+        "msg": df_predictions,
+        "duplicate_urls_ignored": list(duplicate_url_rows.values()),
+        "current_user": user.username,
+    }
 
 
 @router.get(

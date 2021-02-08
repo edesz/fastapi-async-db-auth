@@ -145,6 +145,7 @@ def test_create_predictions(
                 "some basic text must be placed in here of the minimum "
                 "required length"
             ),
+            "duplicate_urls_ignored": [],
         }
     ]
 
@@ -161,7 +162,8 @@ def test_create_predictions(
     assert r.status_code == 200
     assert r.url == f"http://testserver{endpoint}"
     r_text = json.loads(r.text)
-    assert list(r_text.keys()) == ["msg", "current_user"]
+    returned_keys = ["msg", "duplicate_urls_ignored", "current_user"]
+    assert list(r_text.keys()) == returned_keys
     for response, record in zip(r_text["msg"], new_records):
         for key in ["url", "text"]:
             assert response[key] == record[key]
