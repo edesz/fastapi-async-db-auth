@@ -18,7 +18,7 @@
 <a href="https://codecov.io/gh/edesz/fastapi-minimal-ml">
     <img src="https://codecov.io/gh/edesz/fastapi-minimal-ml/branch/main/graph/badge.svg?token=JYERV7HUHM"/>
   </a>
-  <a href="https://www.codacy.com/gh/edesz/fastapi-minimal-ml/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=edesz/fastapi-minimal-ml&amp;utm_campaign=Badge_Coverage"><img src="https://app.codacy.com/project/badge/Coverage/c6c87007799f4af48f915035c15e3745"/></a>
+  <a href="https://www.codacy.com/gh/edesz/fastapi-minimal-ml/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=edesz/fastapi-minimal-ml&amp;utm_campaign=Badge_Coverage"><img src="https://app.codacy.com/project/badge/Coverage/cc6ccfd808304591a67917cbb48e4183"/></a>
   <a href="https://www.codacy.com/gh/edesz/fastapi-minimal-ml/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=edesz/fastapi-minimal-ml&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/cc6ccfd808304591a67917cbb48e4183"/></a>
   <a href="https://wakatime.com/badge/github/edesz/fastapi-minimal-ml.svg"><img alt="wakatime" src="https://wakatime.com/badge/github/edesz/fastapi-minimal-ml.svg"/></a>
 </div>
@@ -210,10 +210,10 @@ That this requires that a postgress database (configured using `fastapi-minimal-
     make stop-container-db
     ```
 
-6. (Optional) Change permissions of local directory mounted as docker-volume
-   ```bash
-   sudo chown -R $USER:$USER ${PWD}/db_data
-   ```
+6.  (Optional) Change permissions of local directory mounted as docker-volume
+    ```bash
+    sudo chown -R $USER:$USER ${PWD}/db_data
+    ```
 
 ## [Contributions](#contributions)
 [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=edesz&theme=blue-green&repo=fastapi-minimal-ml)](https://github.com/edesz/fastapi-minimal-ml)
