@@ -18,6 +18,7 @@
 <a href="https://codecov.io/gh/edesz/fastapi-minimal-ml">
     <img src="https://codecov.io/gh/edesz/fastapi-minimal-ml/branch/main/graph/badge.svg?token=JYERV7HUHM"/>
   </a>
+  <a href="https://www.codacy.com/gh/edesz/fastapi-minimal-ml/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=edesz/fastapi-minimal-ml&amp;utm_campaign=Badge_Coverage"><img src="https://app.codacy.com/project/badge/Coverage/c6c87007799f4af48f915035c15e3745"/></a>
   <a href="https://www.codacy.com/gh/edesz/fastapi-minimal-ml/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=edesz/fastapi-minimal-ml&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/cc6ccfd808304591a67917cbb48e4183"/></a>
   <a href="https://wakatime.com/badge/github/edesz/fastapi-minimal-ml.svg"><img alt="wakatime" src="https://wakatime.com/badge/github/edesz/fastapi-minimal-ml.svg"/></a>
 </div>
@@ -40,6 +41,9 @@
 ## [Table of Contents](#table-of-contents)
 -   [About](#about)
 -   [Usage](#usage)
+    -   [Local Development](#local-development)
+    -   [Testing](#testing)
+    -   [Verification](#verification)
 -   [Features](#features)
 -   [Contributions](#contributions)
 -   [Attributions](#attributions)
@@ -70,7 +74,7 @@ Included
 
 -   `Makefile` with tasks to reproducibly run necessary tasks
     -   alembic migrations
-    -   happypath unit tests
+    -   happypath unit tests, and one unhappypath test
     -   use `gunicorn` to manage `uvicorn` for a mixture of asynchronous Python and parallelism, when instantiating the API
     -   api route verification using Python `requests`
 
@@ -90,6 +94,7 @@ Not included
     -   a few comments are added throughout the code in places where ML-specific components may be added but, since this is a minimal project, such code comments have been kept to a minimum and it is the user's responsibility to add these in as required
 
 ## [Usage](#usage)
+### [Local Development](#local-development)
 1.  Clone this repo into the desired path eg. `$HOME/Downloads`
     ```bash
     git clone https://github.com/edesz/fastapi-minimal-ml.git $HOME/Downloads
@@ -97,27 +102,110 @@ Not included
 
 2.  Export environment variables
     ```bash
-    # Gunicorn (not needed for tests, needed for verify)
+    # Gunicorn (not needed for tests; optionally needed for api, verify)
     export HOST=0.0.0.0
     export API_PORT=8050
-    # PostgreSQL (needed for tests, verify)
+    # PostgreSQL (needed for api, tests, verify)
     export HOSTNAME=localhost
-    export POSTGRES_PORT=5434  # for tests, use 5434 (per line 14 in docker-compose.yml); for verify, use 5432
+    export POSTGRES_PORT=5434  # should match line 14 in docker-compose.yml
     export POSTGRES_DB=test_db
     export POSTGRES_USER=postgres
     export POSTGRES_PASSWORD=postgres
-    # FastAPI User (needed for tests, verify)
-    export API_USER_NAME=<username>
-    export API_USER_PASSWORD=<password>
+    # FastAPI User Authentication (needed for api, tests, verify)
+    export JWT_SECRET=<jwt_secret>
+    # FastAPI User (needed for tests to verify current_user/.msg.username fields from response)
+    export API_USER_NAME=<username_for_user_in_mocked_database>
+    export API_USER_PASSWORD=<password_for_user_in_mocked_database>
     ```
 
-## Verification
-1.  Export environment variables
+3.  Run API locally
     ```bash
-    # FastAPI User (not needed for tests, needed for verify)
-    export API_NEW_USER_NAME=<usrename_for_new_user>
+    make api
+    ```
+
+    To stop server, press <kbd>CTRL</kbd>+<kbd>C</kbd>.
+
+4.  Clean up python artifacts in `fastapi-minimal-ml/api`
+    ```bash
+    make clean-py
+    ```
+
+5.  (Optional) Shutdown containerized postgres database
+    ```bash
+    make stop-container-db
+    ```
+
+### [Testing](#testing)
+1.  Export environment variables (if not already done)
+    ```bash
+    # PostgreSQL
+    export HOSTNAME=localhost
+    export POSTGRES_PORT=5434  # should match line 14 in docker-compose.yml
+    export POSTGRES_DB=test_db
+    export POSTGRES_USER=postgres
+    export POSTGRES_PASSWORD=postgres
+    # FastAPI User Authentication
+    export JWT_SECRET=<jwt_secret>
+    ```
+
+2.  Run tests and show reports (test summary and code coverage)
+    ```bash
+    make tests
+    ```
+
+    Note that this will first create an empty containerized postgress database before running tests. The container will mount the [path to postgres data files](https://www.postgresql.org/docs/current/storage-file-layout.html) (`/var/lib/pgsql/data`) inside the container to `${PWD}/db_data` on the host (this path on the host will be created if necessary). After tests are completed
+
+    -   the container is shut down and the postgres image is deleted
+    -   (when running tess locally) a test summary and code coverage report are opened in separate browser tabs, for inspection
+
+3.  Clean up python artifacts in `fastapi-minimal-ml/api`, and clean up testing artifacts, summary reports and coverage reports in `fastapi-minimal-ml/tests`
+    ```bash
+    make clean-tests
+    ```
+
+### [Verification](#verification)
+Verify successful response of calling **all** API routes when queried with correct input API parameters and user-authentication headers, using the Python [`requests`](https://pypi.org/project/requests/) package.
+
+That this requires that a postgress database (configured using `fastapi-minimal-ml/docker-compose.yml`) is running on port `POSTGRES_PORT` (specified from line 14 in `fastapi-minimal-ml/docker-compose.yml`) and has a single user (having username `API_USER_NAME`) in the users table. A new user (with username `API_NEW_USER_NAME`) will be added to the users table.
+
+1.  If, for example, eight users already exist in the postgres database, then change Line 82 in [`api_verify/api_handle_invalid_data.py`](https://github.com/edesz/fastapi-minimal-ml/blob/main/api_verify/api_handle_invalid_data.py) from 1 to 9.
+
+2.  Export environment variables (if not already done)
+    ```bash
+    # PostgreSQL
+    export HOSTNAME=localhost
+    export POSTGRES_PORT=5434  # should match line 14 in docker-compose.yml
+    export POSTGRES_DB=test_db
+    export POSTGRES_USER=postgres
+    export POSTGRES_PASSWORD=postgres
+    # FastAPI User Authentication
+    export JWT_SECRET=<jwt_secret>
+    # FastAPI User
+    export API_NEW_USER_NAME=<username_for_new_user>
     export API_NEW_USER_PASSWORD=<password_for_new_user>
     ```
+
+3.  Verify successful responses
+    ```bash
+    make verify
+    ```
+
+    Note that after verification, this will leave the database running.
+
+4.  Clean up python artifacts in `fastapi-minimal-ml/api_verify`
+    ```bash
+    make clean-py-verify
+    ```
+
+5.  (Optional) Shutdown containerized postgres database
+    ```bash
+    make stop-container-db
+    ```
+
+6. (Optional) Change permissions of local directory mounted as docker-volume
+   ```bash
+   sudo chown -R $USER:$USER ${PWD}/db_data
+   ```
 
 ## [Contributions](#contributions)
 [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=edesz&theme=blue-green&repo=fastapi-minimal-ml)](https://github.com/edesz/fastapi-minimal-ml)

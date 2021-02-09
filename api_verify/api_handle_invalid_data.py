@@ -22,27 +22,21 @@ if __name__ == "__main__":
     log_fmt = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     logging.basicConfig(level=logging.INFO, format=log_fmt)
 
-    ENV_PORT = int(os.environ.get("PORT", 8050))
-    # # inside container
-    # SERVICE_NAME = os.environ.get("SERVICE_NAME", "api-db")
-    HOST_URL = os.getenv("HOST")
-    # not inside container
+    ENV_PORT = int(os.environ.get("API_PORT", 8050))
+    HOST_URL = os.getenv("HOST", "0.0.0.0")
     HOST_PORT = f"http://{HOST_URL}:{ENV_PORT}"
-    # # inside container
-    # HOST_PORT = f"http://{SERVICE_NAME}:{ENV_PORT}"
 
     PROJ_ROOT_DIR = os.path.abspath(os.getcwd())
     dummy_data_filepath = os.path.join(PROJ_ROOT_DIR, "dummy_url_inputs.json")
     _, multi_obs_list = adl.get_dummy_url_data(dummy_data_filepath)
 
-    # Create user and retrieve headers with JWT for using with authenticated
-    # routes
+    # Create user and retrieve headers with JWT to use in authenticated routes
     API_USER_NAME = os.getenv("API_NEW_USER_NAME")
     API_USER_PASSWORD = os.getenv("API_NEW_USER_PASSWORD")
     headers = adl.create_user(API_USER_NAME, API_USER_PASSWORD, HOST_PORT)
 
     # Add predictions to predictions table
-    url = urljoin(f"{HOST_PORT}/api/v1/topics/", "predict").lower()
+    url = urljoin(f"{HOST_PORT}/api/v1/topics/", "create").lower()
     r = requests.post(
         url,
         data=json.dumps(multi_obs_list),
@@ -84,7 +78,7 @@ if __name__ == "__main__":
     assert list(json.loads(r.text)) == ["username", "password_hash"]
 
     # Verify response of authenticated /auths/user/{user_id} GET endpoint
-    # - assumes a single user, not named tom, exists in the users table
+    # - assumes a single user exists in the users table
     user_id = 2
     url = urljoin(f"{HOST_PORT}/api/v1/auths/user/", str(user_id)).lower()
     r = requests.get(url, headers=headers)

@@ -1,10 +1,13 @@
 # .coveragerc to control coverage.py
 [run]
 source =
+  ./
   app/
+  auth/
 omit =
-  alembic/
-  tests/
+  ./main.py
+  tests/__init__.py
+  tests/*.py
   conftest.py
   auth/__init__.py
   app/__init__.py

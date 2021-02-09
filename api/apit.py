@@ -17,7 +17,7 @@ import app.schemas as sc
 from app.router import api_router
 from auth.utils import authenticate_user, get_password_hash
 
-JWT_SECRET = os.environ.get("JWT_SECRET", "myjwtsecret")
+JWT_SECRET = os.environ.get("JWT_SECRET")
 Users = List[sc.DBUser]
 
 db.get_db()

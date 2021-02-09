@@ -29,10 +29,14 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
           files: ./api/tests/test-logs/coverage.xml
           env_vars: OS,PYTHON
           name: codecov-umbrella
           fail_ci_if_error: true
           path_to_write_report: ./api/tests/test-logs/codecov_report.txt
           verbose: true
+      - name: Run codacy-coverage-reporter
+        uses: codacy/codacy-coverage-reporter-action@master
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          coverage-reports: api/coverage.xml

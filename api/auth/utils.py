@@ -12,7 +12,7 @@ from fastapi.security import OAuth2PasswordBearer
 from passlib.hash import bcrypt
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-JWT_SECRET = os.environ.get("JWT_SECRET", "myjwtsecret")
+JWT_SECRET = os.environ.get("JWT_SECRET")
 
 
 def verify_password(unhashed_password_hash, hashed_password_hash):
@@ -51,13 +51,19 @@ async def authenticate_user(username: str, password: str):
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     """Get currently logged in user as Pydantic model."""
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid username or password",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
     try:
         payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
         db_user = await DBUser.get_one_by_username(payload.get("username"))
+        if db_user is None:
+            raise credentials_exception
         db_user_pydantic = user_pydantic_from_sqlalchemy(db_user)
     except:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid username or password",
-        )
+        raise credentials_exception
+    if db_user is None:
+        raise credentials_exception
     return db_user_pydantic

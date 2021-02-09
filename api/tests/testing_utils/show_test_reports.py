@@ -7,13 +7,13 @@
 
 import argparse
 import logging
-import subprocess
+import webbrowser
 from pathlib import Path
 from shutil import get_terminal_size
 
 
-def show_test_outputs(show_cov_html=True):
-    """Show test code coverage annotated in files."""
+def show_test_outputs(show_htmls=True):
+    """Show test summary report and code coverage annotated in files."""
     term_dims = get_terminal_size((80, 20))
     n_dashes, n_rem = divmod(term_dims[0], 2)
     smsg = ""  # type: str
@@ -27,11 +27,14 @@ def show_test_outputs(show_cov_html=True):
         print(f"{f.read()}{file_print_divider}")
 
     logger = logging.getLogger(__name__)
-    logger.info(f"Lauch Coverage HTML in browser = {show_cov_html}")
+    logger.info(f"Lauch HTMLs in browser = {show_htmls}")
 
-    if show_cov_html:
-        html_file_path = PROJECT_DIR / "test-logs" / "htmlcov" / "index.html"
-        _ = subprocess.Popen(["xdg-open", str(html_file_path)])
+    if show_htmls:
+        test_logs_dir = PROJECT_DIR / "test-logs"
+        cov_html_file_path = test_logs_dir / "htmlcov" / "index.html"
+        summary_html_file_path = test_logs_dir / "testreport.html"
+        for f in [summary_html_file_path, cov_html_file_path]:
+            webbrowser.open_new_tab(str(f))
 
 
 def str2bool(v):
@@ -52,13 +55,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-s",
-        "--show-cov-html",
+        "--show-htmls",
         type=str2bool,
         nargs="?",
         const=True,
-        dest="show_cov_html",
+        dest="show_htmls",
         default=True,
-        help="whether to open Coverage HTML report in browser",
+        help="whether to open Test summary, Coverage HTML reports in browser",
     )
     args = parser.parse_args()
-    show_test_outputs(show_cov_html=args.show_cov_html)
+    show_test_outputs(args.show_htmls)
