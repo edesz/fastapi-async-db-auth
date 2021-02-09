@@ -1,0 +1,9 @@
+---
+exclude_paths:
+  - "api/main.py"
+  - "api/app/__init__.py"
+  - "api/app/auths/__init__.py"
+  - "api/app/topics/__init__.py"
+  - "api/auth/__init__.py"
+  - "api/tests/__init__.py"
+  - "api_verify/__init__.py"
