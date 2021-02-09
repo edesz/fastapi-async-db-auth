@@ -20,6 +20,8 @@
   </a>
   <a href="https://www.codacy.com/gh/edesz/fastapi-minimal-ml/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=edesz/fastapi-minimal-ml&amp;utm_campaign=Badge_Coverage"><img src="https://app.codacy.com/project/badge/Coverage/cc6ccfd808304591a67917cbb48e4183"/></a>
   <a href="https://www.codacy.com/gh/edesz/fastapi-minimal-ml/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=edesz/fastapi-minimal-ml&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/cc6ccfd808304591a67917cbb48e4183"/></a>
+  <a href="https://www.codefactor.io/repository/github/edesz/fastapi-minimal-ml/overview/main"><img src="https://www.codefactor.io/repository/github/edesz/fastapi-minimal-ml/badge/main" alt="CodeFactor" /></a>
+  <a href="https://codeclimate.com/github/edesz/fastapi-minimal-ml/maintainability"><img src="https://api.codeclimate.com/v1/badges/a754c5464e26da508958/maintainability" /></a>
   <a href="https://wakatime.com/badge/github/edesz/fastapi-minimal-ml.svg"><img alt="wakatime" src="https://wakatime.com/badge/github/edesz/fastapi-minimal-ml.svg"/></a>
 </div>
 

@@ -93,11 +93,10 @@ async def read_prediction(
 ):
     """Read single prediction, by URL, from predictions table."""
     db_prediction = await DBPrediction.get_one_by_url(url=url)
-    if db_prediction:
-        return {
-            "msg": DBPredictionRecord(**db_prediction).dict(),
-            "current_user": user.username,
-        }
-    else:
+    if not db_prediction:
         invalid_url_error_msg = f"Received Invalid news article url: {url}."
         raise HTTPException(status_code=418, detail=invalid_url_error_msg)
+    return {
+        "msg": DBPredictionRecord(**db_prediction).dict(),
+        "current_user": user.username,
+    }

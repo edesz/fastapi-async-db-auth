@@ -41,12 +41,11 @@ async def get_users(user: sc.DBUser = Depends(get_current_user)):
 async def get_user(user_id: int, user: sc.DBUser = Depends(get_current_user)):
     """Read single user, by user id, from users table."""
     db_user = await DBUser.get_one(user_id)
-    if db_user:
-        return {
-            "msg": DBUserRecord(**db_user).dict(),
-            "current_user": user.username,
-        }
-    else:
+    if not db_user:
         raise HTTPException(
             status_code=418, detail=f"Received Invalid user ID: {user_id}."
         )
+    return {
+        "msg": DBUserRecord(**db_user).dict(),
+        "current_user": user.username,
+    }
