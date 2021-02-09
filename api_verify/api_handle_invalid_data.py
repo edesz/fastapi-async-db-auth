@@ -22,8 +22,8 @@ if __name__ == "__main__":
     log_fmt = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     logging.basicConfig(level=logging.INFO, format=log_fmt)
 
-    ENV_PORT = int(os.environ.get("API_PORT", 8050))
-    HOST_URL = os.getenv("HOST", "0.0.0.0")
+    ENV_PORT = int(os.environ.get("API_PORT"))
+    HOST_URL = os.getenv("HOST")
     HOST_PORT = f"http://{HOST_URL}:{ENV_PORT}"
 
     PROJ_ROOT_DIR = os.path.abspath(os.getcwd())

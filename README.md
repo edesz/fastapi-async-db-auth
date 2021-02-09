@@ -40,13 +40,18 @@
 
 ## [Table of Contents](#table-of-contents)
 -   [About](#about)
+
 -   [Usage](#usage)
     -   [Local Development](#local-development)
     -   [Testing](#testing)
     -   [Verification](#verification)
+
 -   [Features](#features)
+
 -   [Contributions](#contributions)
+
 -   [Attributions](#attributions)
+
 -   [Future Improvements](#future-improvements)
 
 ## [About](#about)
@@ -172,6 +177,9 @@ That this requires that a postgress database (configured using `fastapi-minimal-
 
 2.  Export environment variables (if not already done)
     ```bash
+    # Gunicorn
+    export HOST=0.0.0.0
+    export API_PORT=8050
     # PostgreSQL
     export HOSTNAME=localhost
     export POSTGRES_PORT=5434  # should match line 14 in docker-compose.yml
