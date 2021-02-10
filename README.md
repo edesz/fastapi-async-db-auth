@@ -177,8 +177,8 @@ Not included
     # FastAPI User Authentication
     export JWT_SECRET=<jwt_secret>
     # FastAPI User
-    export API_USER_NAME=<username_for_user_in_mocked_database>
-    export API_USER_PASSWORD=<password_for_user_in_mocked_database>
+    export API_NEW_USER_NAME=<username_for_user_in_mocked_database>
+    export API_NEW_USER_PASSWORD=<password_for_user_in_mocked_database>
     ```
 
 2.  Run tests using a containerized Postgres database and show reports (test summary and code coverage)

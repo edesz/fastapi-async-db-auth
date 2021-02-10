@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       HOSTNAME: localhost
-      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+      POSTGRES_DB: test_db
       POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
       POSTGRES_PORT: 5434
@@ -41,8 +41,8 @@ jobs:
       - name: Run tests and Show test summary
         run: make tests
         env:
-          API_USER_NAME: ${{ secrets.API_USER_NAME }}
-          API_USER_PASSWORD: ${{ secrets.API_USER_PASSWORD }}
+          API_USER_NAME: ${{ secrets.API_NEW_USER_NAME }}
+          API_USER_PASSWORD: ${{ secrets.API_NEW_USER_PASSWORD }}
           SHOW_COV_HTML: False
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1

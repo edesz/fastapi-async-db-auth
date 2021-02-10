@@ -14,8 +14,8 @@ from app.db import DBPrediction, DBUser
 
 client = TestClient(app)
 
-API_USER_NAME = os.environ.get("API_USER_NAME")
-API_USER_PASSWORD = os.environ.get("API_USER_PASSWORD")
+API_USER_NAME = os.environ.get("API_NEW_USER_NAME")
+API_USER_PASSWORD = os.environ.get("API_NEW_USER_PASSWORD")
 
 
 @pytest.fixture(scope="module")
