@@ -7,7 +7,7 @@ import os
 
 import pytest
 
-API_USER_NAME = os.environ.get("API_USER_NAME")
+API_USER_NAME = os.environ.get("API_NEW_USER_NAME")
 
 
 @pytest.mark.happy
