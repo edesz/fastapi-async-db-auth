@@ -32,7 +32,6 @@ jobs:
         env:
           API_NEW_USER_NAME: ${{ secrets.API_NEW_USER_NAME }}
           API_NEW_USER_PASSWORD: ${{ secrets.API_NEW_USER_PASSWORD }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
           SHOW_COV_HTML: False
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
