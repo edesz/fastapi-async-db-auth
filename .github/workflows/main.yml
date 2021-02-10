@@ -2,16 +2,17 @@ name: CI
 
 on: [push, pull_request]
 
+env:
+  HOSTNAME: localhost
+  POSTGRES_DB: test_db
+  POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+  POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+  POSTGRES_PORT: 5434
+  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
 jobs:
   setup:
     runs-on: ubuntu-latest
-    env:
-      HOSTNAME: localhost
-      POSTGRES_DB: test_db
-      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-      POSTGRES_PORT: 5434
-      JWT_SECRET: ${{ secrets.JWT_SECRET }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v1
