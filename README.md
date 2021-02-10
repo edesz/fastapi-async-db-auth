@@ -92,6 +92,8 @@ Included
 
 -   demo (basic) HTML content (templates, static files)
 
+-   including `docker-compose` to streamline interaction between the database and the front-end
+
 Not included
 -   support for [deployment of the API](https://fastapi.tiangolo.com/deployment/)
 
@@ -341,7 +343,5 @@ A preliminary list of functionality to be implemented is shown below
 
 2.  Add [ReadTheDocs](https://readthedocs.org/) documentation
 
-3.  Explore feasibility of including `docker-compose` to streamline interaction between the database and the front-end
-
-4.  Convert this repository into a [Python `cookiecutter`](https://cookiecutterreadthedocs.io/en/latest/), to allow for more customized re-use when starting new projects
+3.  Convert this repository into a [Python `cookiecutter`](https://cookiecutterreadthedocs.io/en/latest/), to allow for more customized re-use when starting new projects
     -   offer basic deployment support for Azure, Heroku and other platforms, via GitHub Actions workflow, based on user specification in `cookiecutter` input
