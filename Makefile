@@ -1,11 +1,35 @@
 .DEFAULT_GOAL := api
 
-## Start database
-start-db:
+## Start containerized database
+start-container-db:
 	@echo "+ $@"
-	@docker-compose up -d --build
+	@docker-compose up -d --build db
 	@sleep 5
-.PHONY: start-db
+.PHONY: start-container-db
+
+## Run containerized API
+container-api:
+	@echo "+ $@"
+	@docker-compose up -d --build web
+	@sleep 5
+	@./run.sh "apilogs"
+.PHONY: container-api
+
+## Run containerized API verification
+container-api-verify:
+	@echo "+ $@"
+	@docker-compose up -d --build verify
+	@sleep 5
+	@./run.sh "verifylogs"
+.PHONY: container-api-verify
+
+## Start containerized database and containerized API
+.PHONY: start-containers
+start-containers: start-container-db alembic-migrate container-api
+
+## Start containerized database, containerized API and perform containerized verification
+.PHONY: start-containers-verify
+start-containers-verify: start-containers container-api-verify
 
 ## Run alembic init
 alembic-init:
@@ -22,38 +46,58 @@ alembic-migrate:
 	tox -e alembic -- upgrade head
 .PHONY: alembic-migrate
 
+## Stop containers
+stop-containers:
+	@echo "+ $@"
+	@docker-compose down
+	@./run.sh "delete"
+	@docker images
+.PHONY: stop-containers
+
+## Delete database container volume
+delete-db-container-volume:
+	@echo "+ $@"
+	@sudo chown -R $(USER):$(USER) $(PWD)/db_data
+	@rm -rf db_data
+	@docker volume prune -f
+	@docker volume ls
+.PHONY: delete-db-container-volume
+
+## Stop containerized database and API, Delete database container volume and Remove Python artifacts
+.PHONY: stop-containers-clean
+stop-containers-clean: stop-containers delete-db-container-volume clean-py
+
 ## Run API
 api:
 	@echo "+ $@"
 	@tox -e api
 .PHONY: api
 
-## Stop containerized database
-stop-container-db:
-	@echo "+ $@"
-	@docker-compose down
-	@docker rmi postgres
-	@docker images
-	@docker volume ls
-.PHONY: stop-container-db
-
-## Run tests
+## Run tests using containerized database
 run-tests:
 	@echo "+ $@"
 	@tox -e test
 .PHONY: run-tests
 
-## Show test summary report(s)
+## Show test summary reports
 test-summary:
 	@echo "+ $@"
 	@tox -e testsummary
 .PHONY: test-summary
 
-## Run tests and reports
-.PHONY: tests
-tests: start-db run-tests stop-container-db test-summary
+## Stop containerized database
+stop-container-db:
+	@echo "+ $@"
+	@docker-compose down --rmi all
+	@docker images
+	@docker volume ls
+.PHONY: stop-container-db
 
-## Remove Python file artifacts during API development
+## Run tests using containerized database and show summary reports
+.PHONY: tests
+tests: start-container-db run-tests stop-container-db test-summary
+
+## Remove Python artifacts
 clean-py:
 	@echo "+ $@"
 	@find ./api -type f -name "*.py[co]" -delete
@@ -85,11 +129,11 @@ clean-alembic:
 	@rm -f api/alembic/alembic.ini
 .PHONY: clean-alembic
 
-## Clean API
+## Remove Python artifacts and Remove alembic configuration
 .PHONY: clean-api
 clean-api: clean-py clean-alembic
 
-## Remove Python file artifacts during API verification
+## Remove Python artifacts during API verification
 clean-py-verify:
 	@echo "+ $@"
 	@find ./api_verify -type f -name "*.py[co]" -delete

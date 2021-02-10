@@ -109,112 +109,184 @@ Not included
 
 2.  Export environment variables
     ```bash
-    # Gunicorn (not needed for tests; optionally needed for api, verify)
+    # Gunicorn
     export HOST=0.0.0.0
     export API_PORT=8050
-    # PostgreSQL (needed for api, tests, verify)
+    # PostgreSQL (needed for api)
     export HOSTNAME=localhost
-    export POSTGRES_PORT=5434  # should match line 14 in docker-compose.yml
     export POSTGRES_DB=test_db
     export POSTGRES_USER=postgres
     export POSTGRES_PASSWORD=postgres
-    # FastAPI User Authentication (needed for api, tests, verify)
+    export POSTGRES_PORT=5434
+    # FastAPI User Authentication
     export JWT_SECRET=<jwt_secret>
-    # FastAPI User (needed for tests to verify current_user/.msg.username fields from response)
-    export API_USER_NAME=<username_for_user_in_mocked_database>
-    export API_USER_PASSWORD=<password_for_user_in_mocked_database>
     ```
 
 3.  Run API locally
-    ```bash
-    make api
-    ```
+    -   Without using containers<sup>[1](#myfootnote1)</sup>
+        ```bash
+        make start-container-db api
+        ```
+    
+        <a name="myfootnote1">1</a>: container will be used for database, not for API
 
-    To stop server, press <kbd>CTRL</kbd>+<kbd>C</kbd>.
+    -   Using containers
+        ```bash
+        make start-containers
+        ```
 
-4.  Clean up python artifacts in `fastapi-minimal-ml/api`
-    ```bash
-    make clean-py
-    ```
+4.  Stop API server
+    -   Without using containers
 
-5.  (Optional) Shutdown containerized postgres database
-    ```bash
-    make stop-container-db
-    ```
+        -   Initiate `SIGINT` (Press <kbd>CTRL</kbd>+<kbd>C</kbd>)
+        -   Clean up python artifacts in `fastapi-minimal-ml/api`
+            ```bash
+            make clean-py
+            ```
+        -   (Optional) Shutdown containerized postgres database
+            ```bash
+            make stop-container-db
+            ```
+        -   (Optional) Remove any folders mounted as database container volumes
+            ```bash
+            make delete-db-container-volume
+            ```
+
+    -   Using containers
+        ```bash
+        make stop-containers-clean
+        ```
+
+        This will
+
+        -   shutdown the containerized postgres database
+        -   delete the database container volume
+        -   remove Python artifacts
 
 ### [Testing](#testing)
 1.  Export environment variables (if not already done)
     ```bash
     # PostgreSQL
     export HOSTNAME=localhost
-    export POSTGRES_PORT=5434  # should match line 14 in docker-compose.yml
-    export POSTGRES_DB=test_db
-    export POSTGRES_USER=postgres
-    export POSTGRES_PASSWORD=postgres
-    # FastAPI User Authentication
-    export JWT_SECRET=<jwt_secret>
-    ```
-
-2.  Run tests and show reports (test summary and code coverage)
-    ```bash
-    make tests
-    ```
-
-    Note that this will first create an empty containerized postgress database before running tests. The container will mount the [path to postgres data files](https://www.postgresql.org/docs/current/storage-file-layout.html) (`/var/lib/pgsql/data`) inside the container to `${PWD}/db_data` on the host (this path on the host will be created if necessary). After tests are completed
-
-    -   the container is shut down and the postgres image is deleted
-    -   (when running tess locally) a test summary and code coverage report are opened in separate browser tabs, for inspection
-
-3.  Clean up python artifacts in `fastapi-minimal-ml/api`, and clean up testing artifacts, summary reports and coverage reports in `fastapi-minimal-ml/tests`
-    ```bash
-    make clean-tests
-    ```
-
-### [Verification](#verification)
-Verify successful response of calling **all** API routes when queried with correct input API parameters and user-authentication headers, using the Python [`requests`](https://pypi.org/project/requests/) package.
-
-That this requires that a postgress database (configured using `fastapi-minimal-ml/docker-compose.yml`) is running on port `POSTGRES_PORT` (specified from line 14 in `fastapi-minimal-ml/docker-compose.yml`) and has a single user (having username `API_USER_NAME`) in the users table. A new user (with username `API_NEW_USER_NAME`) will be added to the users table.
-
-1.  If, for example, eight users already exist in the postgres database, then change Line 82 in [`api_verify/api_handle_invalid_data.py`](https://github.com/edesz/fastapi-minimal-ml/blob/main/api_verify/api_handle_invalid_data.py) from 1 to 9.
-
-2.  Export environment variables (if not already done)
-    ```bash
-    # Gunicorn
-    export HOST=0.0.0.0
-    export API_PORT=8050
-    # PostgreSQL
-    export HOSTNAME=localhost
-    export POSTGRES_PORT=5434  # should match line 14 in docker-compose.yml
+    export POSTGRES_PORT=5434
     export POSTGRES_DB=test_db
     export POSTGRES_USER=postgres
     export POSTGRES_PASSWORD=postgres
     # FastAPI User Authentication
     export JWT_SECRET=<jwt_secret>
     # FastAPI User
-    export API_NEW_USER_NAME=<username_for_new_user>
-    export API_NEW_USER_PASSWORD=<password_for_new_user>
+    export API_USER_NAME=<username_for_user_in_mocked_database>
+    export API_USER_PASSWORD=<password_for_user_in_mocked_database>
     ```
 
-3.  Verify successful responses
+2.  Run tests using a containerized Postgres database and show reports (test summary and code coverage)
     ```bash
-    make verify
+    make tests
     ```
 
-    Note that after verification, this will leave the database running.
+    Note that, before running tests, the above command will first create an empty containerized postgress database. No tables will be created in this database. The container will mount the [path to postgres data files](https://www.postgresql.org/docs/current/storage-file-layout.html) (`/var/lib/pgsql/data`) inside the container to `${PWD}/db_data` on the host (on the host, this path will be created if necessary). After tests are completed
 
-4.  Clean up python artifacts in `fastapi-minimal-ml/api_verify`
+    -   the container is automatically shut down and the postgres image is deleted
+    -   (when running tests locally) a test summary and code coverage report are opened in separate browser tabs
+
+3.  Clean up
+    -   python artifacts in `fastapi-minimal-ml/api`
+    -   testing artifacts, summary reports and coverage reports in `fastapi-minimal-ml/tests`
+
+    by running
     ```bash
-    make clean-py-verify
+    make clean-tests
     ```
 
-5.  (Optional) Shutdown containerized postgres database
+4.  Remove any local folders mounted as database container volumes
+    ```bash
+    make delete-db-container-volume
+    ```
+
+### [Verification](#verification)
+Verify successful response of calling **all** API routes when queried with correct input API parameters and user-authentication headers, using the Python [`requests`](https://pypi.org/project/requests/) package.
+
+This creates an empty containerized postgress database, and creates empty `users` and `predictions` tables. A new user (with username `API_NEW_USER_NAME` and password `API_NEW_USER_PASSWORD`) will be created and added to the users table.
+
+1.  Export environment variables (if not already done)
+    ```bash
+    # PostgreSQL
+    export HOSTNAME=localhost
+    export POSTGRES_DB=test_db
+    export POSTGRES_USER=postgres
+    export POSTGRES_PASSWORD=postgres
+    export POSTGRES_PORT=5434
+    # FastAPI User Authentication
+    export JWT_SECRET=<jwt_secret>
+    ```
+
+2.  Verify successful API responses locally
+    -   Using containers
+        -   Export environment variables
+            ```bash
+            # Gunicorn
+            export HOST=0.0.0.0
+            export API_PORT=8050
+            # FastAPI User
+            export API_NEW_USER_NAME=<username_for_new_user>
+            export API_NEW_USER_PASSWORD=<password_for_new_user>
+            ```
+        -   Verify
+            ```bash
+            make start-containers-verify
+            ```
+    -   Without using containers<sup>[1](#myfootnote1)</sup>
+        -   Start containerized postgres database
+            ```bash
+            make start-container-db
+            ```
+            <a name="myfootnote1">1</a>: container will be used for database, not for API
+
+        -   Start API
+            ```bash
+            make api
+            ```
+
+        -   In a separate shell
+            -   Export environment variables
+                ```bash
+                # Gunicorn
+                export HOST=0.0.0.0
+                export API_PORT=8050
+                # FastAPI User
+                export API_NEW_USER_NAME=<username_for_new_user>
+                export API_NEW_USER_PASSWORD=<password_for_new_user>
+                ```
+            -   Verify
+                ```bash
+                make verify
+                ```
+            -   Clean up python artifacts in `fastapi-minimal-ml/api_verify`
+                ```bash
+                make clean-py-verify
+                ```
+
+3. (If not using containers) Stop API server
+   -   Initiate `SIGINT` (Press <kbd>CTRL</kbd>+<kbd>C</kbd>)
+
+4. Clean up python artifacts in `fastapi-minimal-ml/api`
+    ```bash
+    make clean-py
+    ```
+
+5.  (If not using containers) Shutdown containerized postgres database
     ```bash
     make stop-container-db
     ```
 
-6.  (Optional) Change permissions of local directory mounted as docker-volume
+6.  (If not using containers) Remove any folders mounted as database container volumes
     ```bash
-    sudo chown -R $USER:$USER ${PWD}/db_data
+    make delete-db-container-volume
+    ```
+
+7.  (If using containers) Shutdown containerized postgres database, Delete database container volume and Remove Python artifacts
+    ```bash
+    make stop-containers-clean
     ```
 
 ## [Contributions](#contributions)

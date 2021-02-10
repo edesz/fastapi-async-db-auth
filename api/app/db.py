@@ -10,15 +10,19 @@ import sqlalchemy
 from app.models import metadata, predictions, users
 
 # SQLAlchemy specific code, as with any other app
-HOSTNAME = os.environ.get("HOSTNAME", "localhost")
-POSTGRES_PORT = os.environ.get("POSTGRES_PORT", 5432)
-POSTGRES_DB = os.environ.get("POSTGRES_DB", "test_db")
-POSTGRES_USER = os.environ.get("POSTGRES_USER", "postgres")
-POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD", "postgres")
-DATABASE2_URL = (
-    f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{HOSTNAME}:"
-    f"{POSTGRES_PORT}/{POSTGRES_DB}"
-)
+DATABASE_URL = os.environ.get("DATABASE_CLOUD_URL")
+if not DATABASE_URL:
+    HOSTNAME = os.environ.get("HOSTNAME")
+    POSTGRES_PORT = os.environ.get("POSTGRES_PORT")
+    POSTGRES_DB = os.environ.get("POSTGRES_DB")
+    POSTGRES_USER = os.environ.get("POSTGRES_USER")
+    POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
+    DATABASE2_URL = (
+        f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{HOSTNAME}:"
+        f"{POSTGRES_PORT}/{POSTGRES_DB}"
+    )
+else:
+    DATABASE2_URL = DATABASE_URL
 
 database = databases.Database(DATABASE2_URL)
 

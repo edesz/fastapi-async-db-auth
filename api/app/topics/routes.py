@@ -49,6 +49,15 @@ async def create(
         df_method1.index[list(duplicate_url_rows.keys())]
     )
 
+    # Raise Exception if all URLs entered are already in the predictions table
+    if df_method1.empty:
+        duplicate_url_rows_str = ",".join(list(duplicate_url_rows.values()))
+        invalid_url_error_msg = (
+            "Received only duplicate news article url(s): "
+            f"[{duplicate_url_rows_str}]"
+        )
+        raise HTTPException(status_code=409, detail=invalid_url_error_msg)
+
     ### Add topic prediction columns to DataFrame, if required - START ###
     #
     ### Add topic prediction columns to DataFrame, if required - END ###
@@ -94,7 +103,7 @@ async def read_prediction(
     """Read single prediction, by URL, from predictions table."""
     db_prediction = await DBPrediction.get_one_by_url(url=url)
     if not db_prediction:
-        invalid_url_error_msg = f"Received Invalid news article url: {url}."
+        invalid_url_error_msg = f"Received Invalid news article url: {url}"
         raise HTTPException(status_code=418, detail=invalid_url_error_msg)
     return {
         "msg": DBPredictionRecord(**db_prediction).dict(),

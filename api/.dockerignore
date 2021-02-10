@@ -1,0 +1,7 @@
+alembic/migrations/__pycache__
+alembic/migrations/versions/__pycache__
+tests/
+.coveragerc
+pytest.ini
+requirements_test.txt
+user_data.json

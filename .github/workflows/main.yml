@@ -3,8 +3,15 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  commit:
+  setup:
     runs-on: ubuntu-latest
+    env:
+      HOSTNAME: localhost
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_PORT: 5434
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v1
@@ -15,15 +22,16 @@ jobs:
         run: python -m pip install --upgrade pip
       - name: Install dependencies
         run: pip install tox
+  coverage:
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    steps:
       - name: Run tests and Show test summary
         run: make tests
         env:
-          HOSTNAME: localhost
-          POSTGRES_PORT: 5434
-          POSTGRES_DB: test_db
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          JWT_SECRET: myjwtsecret
           API_USER_NAME: ${{ secrets.API_USER_NAME }}
           API_USER_PASSWORD: ${{ secrets.API_USER_PASSWORD }}
           SHOW_COV_HTML: False
@@ -41,5 +49,22 @@ jobs:
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           coverage-reports: ./api/tests/test-logs/coverage.xml
-      - name: clean test artifacts
+      - name: Clean test artifacts
         run: make clean-tests
+  build:
+    needs: setup
+    runs-on: ubuntu-latest
+    env:
+      HOST: 0.0.0.0
+      API_PORT: 8050
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    steps:
+      - name: Run containerized API with verification
+        run: make start-containers-verify
+      - name: Stop containers
+        run: make stop-containers
+        env:
+          API_NEW_USER_NAME: ${{ secrets.API_NEW_USER_NAME }}
+          API_NEW_USER_PASSWORD: ${{ secrets.API_NEW_USER_PASSWORD }}

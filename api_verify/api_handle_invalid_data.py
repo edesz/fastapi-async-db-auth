@@ -30,6 +30,10 @@ if __name__ == "__main__":
     dummy_data_filepath = os.path.join(PROJ_ROOT_DIR, "dummy_url_inputs.json")
     _, multi_obs_list = adl.get_dummy_url_data(dummy_data_filepath)
 
+    logger = logging.getLogger(__name__)
+
+    logger.info("Starting verification")
+
     # Create user and retrieve headers with JWT to use in authenticated routes
     API_USER_NAME = os.getenv("API_NEW_USER_NAME")
     API_USER_PASSWORD = os.getenv("API_NEW_USER_PASSWORD")
@@ -45,7 +49,6 @@ if __name__ == "__main__":
     assert r.status_code == 200
     r_text = json.loads(r.text)
     returned_keys = ["msg", "duplicate_urls_ignored", "current_user"]
-    # assert list(r_text) == returned_keys
     assert list(r_text.keys()) == returned_keys
     assert r_text["current_user"] == API_USER_NAME
 
@@ -79,7 +82,7 @@ if __name__ == "__main__":
 
     # Verify response of authenticated /auths/user/{user_id} GET endpoint
     # - assumes a single user exists in the users table
-    user_id = 2
+    user_id = 1
     url = urljoin(f"{HOST_PORT}/api/v1/auths/user/", str(user_id)).lower()
     r = requests.get(url, headers=headers)
     assert r.status_code == 200
@@ -98,3 +101,5 @@ if __name__ == "__main__":
     assert list(r_text["msg"][0].keys()) == ["id", "username", "password_hash"]
     assert len(r_text["msg"]) == user_id
     assert r_text["current_user"] == API_USER_NAME
+
+    logger.info("Completed verification")

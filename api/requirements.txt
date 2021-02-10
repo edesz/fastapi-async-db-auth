@@ -3,6 +3,7 @@ sqlalchemy-utils==0.36.8
 psycopg2_binary==2.8.6
 databases[postgres]==0.4.1
 asyncpg==0.21.0
+alembic==1.5.4
 python-multipart==0.0.5
 bcrypt==3.2.0
 passlib==1.7.4
