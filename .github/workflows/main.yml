@@ -3,6 +3,7 @@ name: CI
 on: [push, pull_request]
 
 env:
+  API_PORT: 8050
   HOSTNAME: localhost
   POSTGRES_DB: test_db
   POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
@@ -66,7 +67,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       HOST: 0.0.0.0
-      API_PORT: 8050
+      API_NEW_USER_NAME: ${{ secrets.API_NEW_USER_NAME }}
+      API_NEW_USER_PASSWORD: ${{ secrets.API_NEW_USER_PASSWORD }}
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -83,7 +85,4 @@ jobs:
       - name: Run containerized API with verification
         run: make start-containers-verify
       - name: Stop containers
-        run: make stop-containers
-        env:
-          API_NEW_USER_NAME: ${{ secrets.API_NEW_USER_NAME }}
-          API_NEW_USER_PASSWORD: ${{ secrets.API_NEW_USER_PASSWORD }}
+        run: make stop-containers          
