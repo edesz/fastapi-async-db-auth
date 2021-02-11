@@ -82,15 +82,15 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     env:
-      WEBAPP_NAME: fastapi-minimal-ml
+      WEBAPP_NAME: "fastapi-minimal-ml"
       WEBAPP_PACKAGE_PATH: './api'
     steps:
       - uses: actions/checkout@v2
       - name: Deploy web App using GH Action akhileshns/heroku-deploy
-        uses: akhileshns/heroku-deploy@v3.10.9
+        uses: akhileshns/heroku-deploy@master
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: ${{env.WEBAPP_NAME}}
+          heroku_app_name: "fastapi-minimal-ml"
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           appdir: "api"
           usedocker: false
