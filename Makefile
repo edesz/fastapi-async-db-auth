@@ -150,7 +150,7 @@ heroku-create:
 heroku-set-env-vars:
 	@echo "+ $@"
 	@heroku config:set JWT_SECRET=$(JWT_SECRET)
-	@heroku config:set HOST=$(HOST)
+	# @heroku config:set HOST=$(HOST)
 .PHONY: heroku-set-env-vars
 
 ## Add PostgreSQL add-on to Heroku app
@@ -175,6 +175,18 @@ heroku-deploy-sub-dir:
 ## Heroku workflow create to deploy
 .PHONY: heroku-run
 heroku-run: heroku-create heroku-set-env-vars heroku-add-remote heroku-deploy-sub-dir
+
+## Detach Heroku add-on
+heroku-detach-postgres-add-on:
+	@echo "+ $@"
+	@heroku addons:destroy heroku-postgresql:hobby-dev --confirm $(HD_APP_NAME)
+.PHONY: heroku-detach-postgres-add-on
+
+## Delete Heroku app
+heroku-delete:
+	@echo "+ $@"
+	@heroku apps:destroy --app $(HD_APP_NAME) --confirm $(HD_APP_NAME)
+.PHONY: heroku-delete
 
 list:
 	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$'
