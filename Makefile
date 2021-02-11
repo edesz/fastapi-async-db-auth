@@ -167,6 +167,12 @@ heroku-set-env-vars:
 	@heroku config:set APP_MODULE=$(APP_MODULE) --app $(HD_APP_NAME)
 .PHONY: heroku-set-env-vars
 
+## Set Heroku CLI to Docker stack
+heroku-set-docker:
+	@echo "+ $@"
+	@heroku stack:set container
+.PHONY: heroku-set-docker
+
 ## Deploy app from sub-directory to Heroku
 heroku-deploy-sub-dir:
 	@echo "+ $@"
