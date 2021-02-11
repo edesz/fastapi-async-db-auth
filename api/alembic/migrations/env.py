@@ -24,7 +24,7 @@ from app.models import metadata as NoteMetadata
 
 target_metadata = [NoteMetadata]
 
-DATABASE_URL = os.environ.get("DATABASE_CLOUD_URL")
+DATABASE_URL = os.environ.get("DATABASE_URL")
 if not DATABASE_URL:
     HOSTNAME = os.environ.get("HOSTNAME", "localhost")
     POSTGRES_PORT = os.environ.get("POSTGRES_PORT", 5432)

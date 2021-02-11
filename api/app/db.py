@@ -10,7 +10,7 @@ import sqlalchemy
 from app.models import metadata, predictions, users
 
 # SQLAlchemy specific code, as with any other app
-DATABASE_URL = os.environ.get("DATABASE_CLOUD_URL")
+DATABASE_URL = os.environ.get("DATABASE_URL")
 if not DATABASE_URL:
     HOSTNAME = os.environ.get("HOSTNAME")
     POSTGRES_PORT = os.environ.get("POSTGRES_PORT")
