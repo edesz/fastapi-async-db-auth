@@ -3,6 +3,7 @@
 
 
 import os
+import ssl
 
 import databases
 import sqlalchemy
@@ -24,7 +25,11 @@ if not DATABASE_URL:
 else:
     DATABASE2_URL = DATABASE_URL
 
-database = databases.Database(DATABASE2_URL)
+ctx = ssl.create_default_context(cafile="")
+ctx.check_hostname = False
+ctx.verify_mode = ssl.CERT_NONE
+
+database = databases.Database(DATABASE2_URL, ssl=ctx)
 
 
 def get_db():
