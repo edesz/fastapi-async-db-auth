@@ -81,7 +81,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Deploy web App using GH Action akhileshns/heroku-deploy
-        uses: akhileshns/heroku-deploy@vv3.10.9
+        uses: akhileshns/heroku-deploy@v3.10.9
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{env.WEBAPP_NAME}}
