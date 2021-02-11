@@ -291,6 +291,55 @@ This creates an empty containerized postgress database, and creates empty `users
     make stop-containers-clean
     ```
 
+## [Heroku Deployment](#heroku-deployment)
+
+### [Required Files](#required-files)
+-   `Procfile`
+    -   [Heroku requirement](https://devcenter.heroku.com/articles/procfile#deploying-to-heroku)
+
+-   `release_tasks.sh`
+    -   run database migrations
+    -   will be called from `Procfile`
+
+-   `runtime.txt`
+    -   specify Python version required
+
+### [Procedure](#procedure)
+1.  Install the Heroku CLI, using the [**standalone installation method**](https://devcenter.heroku.com/articles/heroku-cli#standalone-installation).
+
+2.  Set local environment variable
+    ```bash
+    export HD_APP_NAME=fastapi-minimal-ml
+    ```
+
+3.  [Create Heroku app](https://devcenter.heroku.com/articles/creating-apps#creating-a-named-app)
+    ```bash
+    heroku create $HD_APP_NAME
+    ```
+
+4.  From the app's **Resources** tab, add **Heroku Postgres** as an add-on
+
+5.  [Set environment variables for Heroku app](https://devcenter.heroku.com/articles/config-vars#set-a-config-var)
+    ```bash
+    heroku config:set JWT_SECRET=myjwtsecret
+    ```
+
+6.  Configure sub-directory for use with Heroku app
+    ```bash
+    heroku git:remote -a $HD_APP_NAME
+    git subtree push --prefix api heroku main
+    heroku logs --tail
+    ```
+
+7.  (Optional) Get url for postgres database
+    ```bash
+    DATABASE_URL=$(heroku config:get DATABASE_URL -a $HD_APP_NAME)
+    ```
+
+8.  (Optional) From the app's **Resources** tab, click the up-down arrows (far right) and select **Delete Add-on** to delete the database
+
+9.  (Optional) From **Settings**, select **Delete app...** to delete the app
+
 ## [Contributions](#contributions)
 [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=edesz&theme=blue-green&repo=fastapi-minimal-ml)](https://github.com/edesz/fastapi-minimal-ml)
 

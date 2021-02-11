@@ -13,6 +13,7 @@ from app.models import metadata, predictions, users
 # SQLAlchemy specific code, as with any other app
 DATABASE_URL = os.environ.get("DATABASE_URL")
 if not DATABASE_URL:
+    # Local development
     HOSTNAME = os.environ.get("HOSTNAME")
     POSTGRES_PORT = os.environ.get("POSTGRES_PORT")
     POSTGRES_DB = os.environ.get("POSTGRES_DB")
@@ -22,14 +23,14 @@ if not DATABASE_URL:
         f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{HOSTNAME}:"
         f"{POSTGRES_PORT}/{POSTGRES_DB}"
     )
+    database = databases.Database(DATABASE2_URL)
 else:
+    # Heroku deployment
     DATABASE2_URL = DATABASE_URL
-
-ctx = ssl.create_default_context(cafile="")
-ctx.check_hostname = False
-ctx.verify_mode = ssl.CERT_NONE
-
-database = databases.Database(DATABASE2_URL, ssl=ctx)
+    ctx = ssl.create_default_context(cafile="")
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+    database = databases.Database(DATABASE2_URL)
 
 
 def get_db():
