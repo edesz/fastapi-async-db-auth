@@ -1,6 +1,12 @@
 name: CI
 
-on: [push, pull_request]
+on: 
+  push:
+    branches:    
+      - main 
+  pull_request:
+    branches:
+      - main
 
 env:
   API_PORT: 8050  # if not in the coverage job, then docker-compose web ports errors out
@@ -87,8 +93,6 @@ jobs:
           heroku_app_name: ${{env.WEBAPP_NAME}}
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           appdir: "api"
-          branch: main
-          remote_branch: main
           usedocker: false
         env:
           HD_HOSTNAME: localhost
