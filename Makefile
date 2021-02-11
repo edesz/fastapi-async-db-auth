@@ -163,6 +163,8 @@ heroku-set-env-vars:
 	@echo "+ $@"
 	@heroku config:set JWT_SECRET=$(JWT_SECRET) --app $(HD_APP_NAME)
 	@heroku config:set HOST=$(HOST) --app $(HD_APP_NAME)
+	@heroku config:set WORKER_CLASS=$(WORKER_CLASS) --app $(HD_APP_NAME)
+	@heroku config:set APP_MODULE=$(APP_MODULE) --app $(HD_APP_NAME)
 .PHONY: heroku-set-env-vars
 
 ## Deploy app from sub-directory to Heroku
