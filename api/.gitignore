@@ -1,5 +1,5 @@
 .coveragerc
-.gitignore
+.dockerignore
 tests/
 Dockerfile
 dummy_input_data.json
