@@ -322,19 +322,19 @@ This creates an empty containerized postgress database, and creates empty `users
     make heroku-create
     ```
 
-6.  Add Heroku remote to local git repo
+4.  Add Heroku remote to local git repo
     ```bash
     make heroku-add-remote
     ```
 
-4.  Add a PostGreSQL database as a [Heroku Add-On](https://elements.heroku.com/addons/heroku-postgresql)
+5.  Add a PostgreSQL database as a [Heroku Add-On](https://elements.heroku.com/addons/heroku-postgresql)
     ```bash
     make heroku-create-postgres-add-on
     ```
 
     **or**, from the app's **Resources** tab, search for the **Heroku Postgres** add-on and add it to the app.
 
-5.  [Set environment variables for Heroku app](https://devcenter.heroku.com/articles/config-vars#set-a-config-var)
+6.  [Set environment variables for Heroku app](https://devcenter.heroku.com/articles/config-vars#set-a-config-var)
     ```bash
     make heroku-set-env-vars
     ```
@@ -347,11 +347,18 @@ This creates an empty containerized postgress database, and creates empty `users
 8.  (Optional) Get url for postgres database
     ```bash
     DATABASE_URL=$(heroku config:get DATABASE_URL -a $HD_APP_NAME)
+    echo $DATABASE_URL
     ```
 
-9.  (Optional) From the app's **Resources** tab, click the up-down arrows (far right) and select **Delete Add-on** to delete the database
+9.  Detach PostgreSQL database Add-On from app
+    ```bash
+    make heroku-detach-postgres-add-on
+    ```
 
-10.  (Optional) From **Settings**, select **Delete app...** to delete the app
+10.  Delete Heroku app
+     ```bash
+     heroku-delete
+     ``` 
 
 ## [Contributions](#contributions)
 [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=edesz&theme=blue-green&repo=fastapi-minimal-ml)](https://github.com/edesz/fastapi-minimal-ml)
