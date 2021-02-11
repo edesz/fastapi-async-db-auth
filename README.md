@@ -307,38 +307,51 @@ This creates an empty containerized postgress database, and creates empty `users
 ### [Procedure](#procedure)
 1.  Install the Heroku CLI, using the [**standalone installation method**](https://devcenter.heroku.com/articles/heroku-cli#standalone-installation).
 
-2.  Set local environment variable
+2.  Set local environment variables
     ```bash
+    # Gunicorn
+    export HOST=0.0.0.0
+    # FastAPI User Authentication
+    export JWT_SECRET=<jwt_secret>
+    # Heroku
     export HD_APP_NAME=fastapi-minimal-ml
     ```
 
 3.  [Create Heroku app](https://devcenter.heroku.com/articles/creating-apps#creating-a-named-app)
     ```bash
-    heroku create $HD_APP_NAME
+    make heroku-create
     ```
 
-4.  From the app's **Resources** tab, add **Heroku Postgres** as an add-on
+4.  Add a PostGreSQL database as a [Heroku Add-On](https://elements.heroku.com/addons/heroku-postgresql)
+    ```bash
+    make heroku-create-postgres-add-on
+    ```
+
+    **or**, from the app's **Resources** tab, search for the **Heroku Postgres** add-on and add it to the app.
 
 5.  [Set environment variables for Heroku app](https://devcenter.heroku.com/articles/config-vars#set-a-config-var)
     ```bash
-    heroku config:set JWT_SECRET=myjwtsecret
+    make heroku-set-env-vars
     ```
 
-6.  Configure sub-directory for use with Heroku app
+6.  Add Heroku remote to local git repo
     ```bash
-    heroku git:remote -a $HD_APP_NAME
-    git subtree push --prefix api heroku main
-    heroku logs --tail
+    make heroku-add-remote
     ```
 
-7.  (Optional) Get url for postgres database
+7.  Deploy sub-directory to Heroku app
+    ```bash
+    make heroku-deploy-sub-dir
+    ```
+
+8.  (Optional) Get url for postgres database
     ```bash
     DATABASE_URL=$(heroku config:get DATABASE_URL -a $HD_APP_NAME)
     ```
 
-8.  (Optional) From the app's **Resources** tab, click the up-down arrows (far right) and select **Delete Add-on** to delete the database
+9.  (Optional) From the app's **Resources** tab, click the up-down arrows (far right) and select **Delete Add-on** to delete the database
 
-9.  (Optional) From **Settings**, select **Delete app...** to delete the app
+10.  (Optional) From **Settings**, select **Delete app...** to delete the app
 
 ## [Contributions](#contributions)
 [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=edesz&theme=blue-green&repo=fastapi-minimal-ml)](https://github.com/edesz/fastapi-minimal-ml)

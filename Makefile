@@ -140,6 +140,42 @@ clean-py-verify:
 	@find ./api_verify -type d -name "__pycache__" -delete
 .PHONY: clean-py-verify
 
+## Create Heroku app
+heroku-create:
+	@echo "+ $@"
+	@heroku create $(HD_APP_NAME)
+.PHONY: heroku-create
+
+## Set Heroku ENV vars
+heroku-set-env-vars:
+	@echo "+ $@"
+	@heroku config:set JWT_SECRET=$(JWT_SECRET)
+	@heroku config:set HOST=$(HOST)
+.PHONY: heroku-set-env-vars
+
+## Add PostgreSQL add-on to Heroku app
+heroku-create-postgres-add-on:
+	@echo "+ $@"
+	@heroku addons:create heroku-postgresql:hobby-dev
+.PHONY: heroku-create-postgres-add-on
+
+## Add a remote to local repository of existing app
+heroku-add-remote:
+	@echo "+ $@"
+	@heroku git:remote -a $(HD_APP_NAME)
+.PHONY: heroku-add-remote
+
+## Deploy app from sub-directory to Heroku
+heroku-deploy-sub-dir:
+	@echo "+ $@"
+	@git subtree push --prefix api heroku main
+	@heroku logs --tail
+.PHONY: heroku-deploy-sub-dir
+
+## Heroku workflow create to deploy
+.PHONY: heroku-run
+heroku-run: heroku-create heroku-set-env-vars heroku-add-remote heroku-deploy-sub-dir
+
 list:
 	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$'
 .PHONY: list
