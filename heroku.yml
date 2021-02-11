@@ -6,4 +6,4 @@ release:
     - ./release_tasks.sh
   image: web
 run:
-  web: gunicorn --workers 1 --bind 0.0.0.0:$PORT --worker-class uvicorn.workers.UvicornWorker main:app
+  web: gunicorn --workers 1 --bind $HOST:$PORT --worker-class $WORKER_CLASS $APP_MODULE
