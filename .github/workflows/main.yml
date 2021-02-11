@@ -94,6 +94,7 @@ jobs:
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           appdir: "api"
           usedocker: false
+          justlogin: true
         env:
           HD_HOSTNAME: localhost
           HD_HOST: 0.0.0.0
@@ -101,3 +102,7 @@ jobs:
           HD_API_NEW_USER_PASSWORD: ${{ secrets.API_NEW_USER_PASSWORD }}
           HD_JWT_SECRET: ${{ secrets.JWT_SECRET }}
           HD_DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      - run: |
+          git config user.name "edesz" && git config user.email "elsdes3@gmail.com"
+          git remote add heroku-dev git@heroku.com:fastapi-minimal-ml.git
+          git push heroku-dev HEAD:master
