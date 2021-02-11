@@ -10,7 +10,5 @@ build:
     web: api/Dockerfile.web
 release:
   command:
-    - ./release_tasks.sh
+    - DATABASE_URL=$(heroku config:get DATABASE_URL -a fastapi-minimal-mlc) ./release_tasks.sh
   image: web
-  config:
-    DATABASE_URL: ${DATABASE_URL}
