@@ -88,7 +88,6 @@ jobs:
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           appdir: "api"
           usedocker: false
-          buildpack: "https://github.com/heroku/heroku-buildpack-python.git"
         env:
           HD_HOSTNAME: localhost
           HD_HOST: 0.0.0.0
