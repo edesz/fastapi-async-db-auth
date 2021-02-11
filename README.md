@@ -322,6 +322,11 @@ This creates an empty containerized postgress database, and creates empty `users
     make heroku-create
     ```
 
+6.  Add Heroku remote to local git repo
+    ```bash
+    make heroku-add-remote
+    ```
+
 4.  Add a PostGreSQL database as a [Heroku Add-On](https://elements.heroku.com/addons/heroku-postgresql)
     ```bash
     make heroku-create-postgres-add-on
@@ -332,11 +337,6 @@ This creates an empty containerized postgress database, and creates empty `users
 5.  [Set environment variables for Heroku app](https://devcenter.heroku.com/articles/config-vars#set-a-config-var)
     ```bash
     make heroku-set-env-vars
-    ```
-
-6.  Add Heroku remote to local git repo
-    ```bash
-    make heroku-add-remote
     ```
 
 7.  Deploy sub-directory to Heroku app

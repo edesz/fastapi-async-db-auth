@@ -146,12 +146,11 @@ heroku-create:
 	@heroku create $(HD_APP_NAME)
 .PHONY: heroku-create
 
-## Set Heroku ENV vars
-heroku-set-env-vars:
+## Add a remote to local repository of existing app
+heroku-add-remote:
 	@echo "+ $@"
-	@heroku config:set JWT_SECRET=$(JWT_SECRET)
-	# @heroku config:set HOST=$(HOST)
-.PHONY: heroku-set-env-vars
+	@heroku git:remote -a $(HD_APP_NAME)
+.PHONY: heroku-add-remote
 
 ## Add PostgreSQL add-on to Heroku app
 heroku-create-postgres-add-on:
@@ -159,11 +158,12 @@ heroku-create-postgres-add-on:
 	@heroku addons:create heroku-postgresql:hobby-dev
 .PHONY: heroku-create-postgres-add-on
 
-## Add a remote to local repository of existing app
-heroku-add-remote:
+## Set Heroku ENV vars
+heroku-set-env-vars:
 	@echo "+ $@"
-	@heroku git:remote -a $(HD_APP_NAME)
-.PHONY: heroku-add-remote
+	@heroku config:set JWT_SECRET=$(JWT_SECRET) --app $(HD_APP_NAME)
+	@heroku config:set HOST=$(HOST) --app $(HD_APP_NAME)
+.PHONY: heroku-set-env-vars
 
 ## Deploy app from sub-directory to Heroku
 heroku-deploy-sub-dir:
@@ -172,9 +172,9 @@ heroku-deploy-sub-dir:
 	@heroku logs --tail
 .PHONY: heroku-deploy-sub-dir
 
-## Heroku workflow create to deploy
+## Heroku workflow to deploy app
 .PHONY: heroku-run
-heroku-run: heroku-create heroku-set-env-vars heroku-add-remote heroku-deploy-sub-dir
+heroku-run: heroku-create heroku-add-remote heroku-create-postgres-add-on heroku-set-env-vars heroku-deploy-sub-dir
 
 ## Detach Heroku add-on
 heroku-detach-postgres-add-on:
@@ -187,6 +187,10 @@ heroku-delete:
 	@echo "+ $@"
 	@heroku apps:destroy --app $(HD_APP_NAME) --confirm $(HD_APP_NAME)
 .PHONY: heroku-delete
+
+## Heroku workflow to delete app
+.PHONY: heroku-stop
+heroku-stop: heroku-detach-postgres-add-on heroku-delete
 
 list:
 	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$'
