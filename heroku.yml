@@ -12,3 +12,5 @@ release:
   command:
     - ./release_tasks.sh
   image: web
+  config:
+    DATABASE_URL: ${DATABASE_URL}
