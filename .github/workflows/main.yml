@@ -3,7 +3,7 @@ name: CI
 on: [push, pull_request]
 
 env:
-  API_PORT: 8050
+  API_PORT: 8050  # if not in the coverage job, then docker-compose web ports errors out
   HOSTNAME: localhost
   POSTGRES_DB: test_db
   POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
