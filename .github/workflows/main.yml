@@ -81,13 +81,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Deploy web App using GH Action akhileshns/heroku-deploy
-        uses: akhileshns/heroku-deploy@v3.0.0
+        uses: akhileshns/heroku-deploy@vv3.10.9
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{env.WEBAPP_NAME}}
           heroku_email: ${{secrets.HEROKU_EMAIL}}
-          appdir: ${{env.WEBAPP_PACKAGE_PATH}}
+          appdir: "api"
           usedocker: false
+          buildpack: "https://github.com/heroku/heroku-buildpack-python.git"
         env:
           HD_HOSTNAME: localhost
           HD_HOST: 0.0.0.0
