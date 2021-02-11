@@ -87,6 +87,8 @@ jobs:
           heroku_app_name: ${{env.WEBAPP_NAME}}
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           appdir: "api"
+          branch: main
+          remote_branch: main
           usedocker: false
         env:
           HD_HOSTNAME: localhost
