@@ -1,7 +1,9 @@
 .coveragerc
 .gitignore
 tests/
+conftest.py
 Dockerfile
+Dockerfile.heroku
 dummy_input_data.json
 Procfile
 pytest.ini

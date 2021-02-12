@@ -162,8 +162,8 @@ heroku-create-postgres-add-on:
 heroku-set-env-vars:
 	@echo "+ $@"
 	@heroku config:set JWT_SECRET=$(JWT_SECRET) --app $(HD_APP_NAME)
-	@heroku config:set HOST=$(HOST) --app $(HD_APP_NAME)
 	@heroku config:set WORKER_CLASS=$(WORKER_CLASS) --app $(HD_APP_NAME)
+	@heroku config:set HOST=$(HOST) --app $(HD_APP_NAME)
 	@heroku config:set APP_MODULE=$(APP_MODULE) --app $(HD_APP_NAME)
 .PHONY: heroku-set-env-vars
 
@@ -180,9 +180,26 @@ heroku-deploy-sub-dir:
 	@heroku logs --tail
 .PHONY: heroku-deploy-sub-dir
 
+## Set Heroku CLI to container stack
+heroku-stack-set-container:
+	@echo "+ $@"
+	@heroku stack:set container
+.PHONY: heroku-stack-set-container
+
+## Git push to deploy containerized app from Heroku CLI
+heroku-git-push:
+	@echo "+ $@"
+	@git push heroku main
+	@heroku logs --tail
+.PHONY: heroku-git-push
+
 ## Heroku workflow to deploy app
 .PHONY: heroku-run
 heroku-run: heroku-create heroku-add-remote heroku-create-postgres-add-on heroku-set-env-vars heroku-deploy-sub-dir
+
+## Heroku workflow to deploy containerized app
+.PHONY: heroku-docker-run
+heroku-docker-run: heroku-create heroku-add-remote heroku-create-postgres-add-on heroku-set-env-vars heroku-stack-set-container heroku-git-push
 
 ## Detach Heroku add-on
 heroku-detach-postgres-add-on:
