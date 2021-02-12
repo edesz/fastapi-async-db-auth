@@ -22,7 +22,6 @@
   <a href="https://www.codacy.com/gh/edesz/fastapi-minimal-ml/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=edesz/fastapi-minimal-ml&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/cc6ccfd808304591a67917cbb48e4183"/></a>
   <a href="https://www.codefactor.io/repository/github/edesz/fastapi-minimal-ml/overview/main"><img src="https://www.codefactor.io/repository/github/edesz/fastapi-minimal-ml/badge/main" alt="CodeFactor" /></a>
   <a href="https://codeclimate.com/github/edesz/fastapi-minimal-ml/maintainability"><img src="https://api.codeclimate.com/v1/badges/a754c5464e26da508958/maintainability" /></a>
-  <a href="https://wakatime.com/badge/github/edesz/fastapi-minimal-ml.svg"><img alt="wakatime" src="https://wakatime.com/badge/github/edesz/fastapi-minimal-ml.svg"/></a>
 </div>
 
 <div align="center">
@@ -43,12 +42,14 @@
 ## [Table of Contents](#table-of-contents)
 -   [About](#about)
 
+-   [Features](#features)
+
 -   [Usage](#usage)
     -   [Local Development](#local-development)
     -   [Testing](#testing)
     -   [Verification](#verification)
 
--   [Features](#features)
+-   [Deployment](#deployment)
 
 -   [Contributions](#contributions)
 
@@ -57,7 +58,7 @@
 -   [Future Improvements](#future-improvements)
 
 ## [About](#about)
-This is a **minimal** [FastAPI](https://fastapi.tiangolo.com/) project, with the python -based web-framework `fastapi` and external dependencies to facilitate use of a postgres database (controlled by `sqlalchemy` and requiring user authentication) and unit tests (mocking database access, when required) to start using FastAPI with
+This is a **minimal** [FastAPI](https://fastapi.tiangolo.com/) project, with the python-based web-framework `fastapi` and external dependencies to facilitate use of a postgres database (controlled by `sqlalchemy` and requiring user authentication) and unit tests (mocking database access, when required) to start using FastAPI with
 
 -   an asynchronous database (only create and read) operations controlled by `sqlalchemy`, per [FastAPI async database docs](https://fastapi.tiangolo.com/advanced/async-sql-databases/)
 -   alembic migrations, per Alembic docs ([configure](https://alembic.sqlalchemy.org/en/latest/tutorial.html), [auto-generate](https://alembic.sqlalchemy.org/en/latest/autogenerate.html#auto-generating-migrations))
@@ -291,74 +292,8 @@ This creates an empty containerized postgress database, and creates empty `users
     make stop-containers-clean
     ```
 
-## [Heroku Deployment](#heroku-deployment)
-
-### [Required Files](#required-files)
--   `Procfile`
-    -   [Heroku requirement](https://devcenter.heroku.com/articles/procfile#deploying-to-heroku)
-
--   `release_tasks.sh`
-    -   run database migrations
-    -   will be called from `Procfile`
-
--   `runtime.txt`
-    -   specify Python version required
-
-### [Procedure](#procedure)
-1.  Install the Heroku CLI, using the [**standalone installation method**](https://devcenter.heroku.com/articles/heroku-cli#standalone-installation).
-
-2.  Set local environment variables
-    ```bash
-    # Gunicorn
-    export HOST=0.0.0.0
-    # FastAPI User Authentication
-    export JWT_SECRET=<jwt_secret>
-    # Heroku
-    export HD_APP_NAME=fastapi-minimal-ml
-    ```
-
-3.  [Create Heroku app](https://devcenter.heroku.com/articles/creating-apps#creating-a-named-app)
-    ```bash
-    make heroku-create
-    ```
-
-4.  Add Heroku remote to local git repo
-    ```bash
-    make heroku-add-remote
-    ```
-
-5.  Add a PostgreSQL database as a [Heroku Add-On](https://elements.heroku.com/addons/heroku-postgresql)
-    ```bash
-    make heroku-create-postgres-add-on
-    ```
-
-    **or**, from the app's **Resources** tab, search for the **Heroku Postgres** add-on and add it to the app.
-
-6.  [Set environment variables for Heroku app](https://devcenter.heroku.com/articles/config-vars#set-a-config-var)
-    ```bash
-    make heroku-set-env-vars
-    ```
-
-7.  Deploy sub-directory to Heroku app
-    ```bash
-    make heroku-deploy-sub-dir
-    ```
-
-8.  (Optional) Get url for postgres database
-    ```bash
-    DATABASE_URL=$(heroku config:get DATABASE_URL -a $HD_APP_NAME)
-    echo $DATABASE_URL
-    ```
-
-9.  Detach PostgreSQL database Add-On from app
-    ```bash
-    make heroku-detach-postgres-add-on
-    ```
-
-10.  Delete Heroku app
-     ```bash
-     heroku-delete
-     ``` 
+## [Deployment](#deployment)
+Currently, only deployment to Heroku is supported - see the instructions [here](fastapi-minimal-ml/blob/main/docs/heroku.md).
 
 ## [Contributions](#contributions)
 [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=edesz&theme=blue-green&repo=fastapi-minimal-ml)](https://github.com/edesz/fastapi-minimal-ml)
@@ -403,14 +338,18 @@ Other sources that were used are documentation for the following Python packages
 -   [Coverage.py](https://coverage.readthedocs.io/en/coverage-5.4/index.html)
 -   [Tox](https://tox.readthedocs.io/en/latest/index.html)
 
-as well as [documentation for Python projects using Github Actions](https://docs.github.com/en/actions/guides/building-and-testing-python) and [CodeCov's Github Action](https://github.com/codecov/codecov-action#codecov-github-action).
+as well as [Github Actions](https://github.com/features/actions) documentation for
+-   [Python projects](https://docs.github.com/en/actions/guides/building-and-testing-python)
+-   [CodeCov](https://github.com/codecov/codecov-action#codecov-github-action)
+
+and [`Makefile`](https://www.gnu.org/software/make/manual/make.html#Introduction)s from two open-source projects ([1](https://github.com/drivendata/cookiecutter-data-science), [2](https://github.com/hackebrot/pytest-cookies)).
 
 ## [Future Improvements](#future-improvements)
-A preliminary list of functionality to be implemented is shown below
+A preliminary list of features planned to be implemented is shown below
 
 1.  Add *Update* and *Delete* components of [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) to `api/app/topics/routes.py`
 
 2.  Add [ReadTheDocs](https://readthedocs.org/) documentation
 
 3.  Convert this repository into a [Python `cookiecutter`](https://cookiecutterreadthedocs.io/en/latest/), to allow for more customized re-use when starting new projects
-    -   offer basic deployment support for Azure, Heroku and other platforms, via GitHub Actions workflow, based on user specification in `cookiecutter` input
+    -   add to existing deployment support ([Heroku](#heroku-deployment)) for other cloud providers, based on user specification in `cookiecutter` input

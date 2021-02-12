@@ -1,4 +1,10 @@
-.DEFAULT_GOAL := api
+#################################################################################
+# GLOBALS                                                                       #
+#################################################################################
+
+#################################################################################
+# COMMANDS                                                                      #
+#################################################################################
 
 ## Start containerized database
 start-container-db:
@@ -155,23 +161,15 @@ heroku-add-remote:
 ## Add PostgreSQL add-on to Heroku app
 heroku-create-postgres-add-on:
 	@echo "+ $@"
-	@heroku addons:create heroku-postgresql:hobby-dev
+	@heroku addons:create heroku-postgresql:hobby-dev --app $(HD_APP_NAME)
 .PHONY: heroku-create-postgres-add-on
 
 ## Set Heroku ENV vars
 heroku-set-env-vars:
 	@echo "+ $@"
 	@heroku config:set JWT_SECRET=$(JWT_SECRET) --app $(HD_APP_NAME)
-	@heroku config:set WORKER_CLASS=$(WORKER_CLASS) --app $(HD_APP_NAME)
 	@heroku config:set HOST=$(HOST) --app $(HD_APP_NAME)
-	@heroku config:set APP_MODULE=$(APP_MODULE) --app $(HD_APP_NAME)
 .PHONY: heroku-set-env-vars
-
-## Set Heroku CLI to Docker stack
-heroku-set-docker:
-	@echo "+ $@"
-	@heroku stack:set container
-.PHONY: heroku-set-docker
 
 ## Deploy app from sub-directory to Heroku
 heroku-deploy-sub-dir:
@@ -180,13 +178,13 @@ heroku-deploy-sub-dir:
 	@heroku logs --tail
 .PHONY: heroku-deploy-sub-dir
 
-## Set Heroku CLI to container stack for containerized app
+## (Heroku Docker) Set app to Heroku's container stack
 heroku-stack-set-container:
 	@echo "+ $@"
 	@heroku stack:set container
 .PHONY: heroku-stack-set-container
 
-## Git push to deploy containerized app from Heroku CLI
+## (Heroku Docker) Git push to deploy containerized app from Heroku CLI
 heroku-git-push:
 	@echo "+ $@"
 	@git push heroku main
@@ -197,7 +195,7 @@ heroku-git-push:
 .PHONY: heroku-run
 heroku-run: heroku-create heroku-add-remote heroku-create-postgres-add-on heroku-set-env-vars heroku-deploy-sub-dir
 
-## Heroku workflow to deploy containerized app
+## (Heroku Docker) Heroku workflow to deploy containerized app
 .PHONY: heroku-docker-run
 heroku-docker-run: heroku-create heroku-add-remote heroku-create-postgres-add-on heroku-set-env-vars heroku-stack-set-container heroku-git-push
 
@@ -217,6 +215,67 @@ heroku-delete:
 .PHONY: heroku-stop
 heroku-stop: heroku-detach-postgres-add-on heroku-delete
 
-list:
-	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$'
-.PHONY: list
+# list:
+# 	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$'
+# .PHONY: list
+
+#################################################################################
+# Self Documenting Commands                                                     #
+#################################################################################
+
+.DEFAULT_GOAL := help
+
+# Inspired by <http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html>
+# sed script explained:
+# /^##/:
+# 	* save line in hold space
+# 	* purge line
+# 	* Loop:
+# 		* append newline + line to hold space
+# 		* go to next line
+# 		* if line starts with doc comment, strip comment character off and loop
+# 	* remove target prerequisites
+# 	* append hold space (+ newline) to line
+# 	* replace newline plus comments by `---`
+# 	* print line
+# Separate expressions are necessary because labels cannot be delimited by
+# semicolon; see <http://stackoverflow.com/a/11799865/1968>
+.PHONY: help
+help:
+	@echo "$$(tput bold)Available rules:$$(tput sgr0)"
+	@echo
+	@sed -n -e "/^## / { \
+		h; \
+		s/.*//; \
+		:doc" \
+		-e "H; \
+		n; \
+		s/^## //; \
+		t doc" \
+		-e "s/:.*//; \
+		G; \
+		s/\\n## /---/; \
+		s/\\n/ /g; \
+		p; \
+	}" ${MAKEFILE_LIST} \
+	| LC_ALL='C' sort --ignore-case \
+	| awk -F '---' \
+		-v ncol=$$(tput cols) \
+		-v indent=19 \
+		-v col_on="$$(tput setaf 6)" \
+		-v col_off="$$(tput sgr0)" \
+	'{ \
+		printf "%s%*s%s ", col_on, -indent, $$1, col_off; \
+		n = split($$2, words, " "); \
+		line_length = ncol - indent; \
+		for (i = 1; i <= n; i++) { \
+			line_length -= length(words[i]) + 1; \
+			if (line_length <= 0) { \
+				line_length = ncol - indent - length(words[i]) - 1; \
+				printf "\n%*s ", -indent, " "; \
+			} \
+			printf "%s ", words[i]; \
+		} \
+		printf "\n"; \
+	}' \
+	| more $(shell test $(shell uname) = Darwin && echo '--no-init --raw-control-chars')

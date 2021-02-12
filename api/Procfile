@@ -1,2 +1,2 @@
 release: ./release_tasks.sh
-web: gunicorn -w 1 --bind ${HOST}:${PORT} -k ${WORKER_CLASS} ${APP_MODULE}
+web: gunicorn -w 1 --bind ${HOST}:${PORT} -k uvicorn.workers.UvicornWorker main:app
