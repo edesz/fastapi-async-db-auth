@@ -1,6 +1,6 @@
 build:
   docker:
-    web: api/Dockerfile.web
+    web: api/Dockerfile.heroku
 release:
   command:
     - ./release_tasks.sh
