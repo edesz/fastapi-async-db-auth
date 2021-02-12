@@ -3,7 +3,6 @@
 tests/
 conftest.py
 Dockerfile
-Dockerfile.heroku
 dummy_input_data.json
 pytest.ini
 requirements_test.txt

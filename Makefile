@@ -180,7 +180,7 @@ heroku-deploy-sub-dir:
 	@heroku logs --tail
 .PHONY: heroku-deploy-sub-dir
 
-## Set Heroku CLI to container stack
+## Set Heroku CLI to container stack for containerized app
 heroku-stack-set-container:
 	@echo "+ $@"
 	@heroku stack:set container
