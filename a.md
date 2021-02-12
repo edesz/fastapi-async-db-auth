@@ -1,4 +1,4 @@
-export HD_APP_NAME=fastapi-minimal-mlg
+export HD_APP_NAME=fastapi-minimal-mlh
 export HOST=0.0.0.0
 export JWT_SECRET=myjwtsecret
 export WORKER_CLASS=uvicorn.workers.UvicornWorker
