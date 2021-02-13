@@ -80,7 +80,7 @@ Included
 -   user-authentication with Oauth2 using password, bearer and JWT required in order to post new records (predictions) to the database table
     -   a separate table is created to keep track of registered users
 
--   `Makefile` with tasks to reproducibly run necessary tasks
+-   `Makefile` with [targets](https://www.gnu.org/software/make/manual/html_node/Phony-Targets.html#Phony-Targets) to reproducibly run necessary shell commands
     -   alembic migrations
     -   happypath unit tests, and one unhappypath test
     -   use `gunicorn` to manage `uvicorn` for a mixture of asynchronous Python and parallelism, when instantiating the API
@@ -128,7 +128,7 @@ Not included
 3.  Run API locally
     -   Without using containers<sup>[1](#myfootnote1)</sup>
         ```bash
-        make start-container-db api
+        make start-container-db alembic-migrate api
         ```
     
         <a name="myfootnote1">1</a>: container will be used for database, not for API
@@ -207,12 +207,25 @@ Not included
     ```
 
 ### [Verification](#verification)
-Verify successful response of calling **all** API routes when queried with correct input API parameters and user-authentication headers, using the Python [`requests`](https://pypi.org/project/requests/) package.
+Verify successful response of calling **all** API routes when queried with correct input API parameters and user-authentication headers, using the Python [`requests`](https://pypi.org/project/requests/) package. This cannot be used with an existing database.
 
-This creates an empty containerized postgress database, and creates empty `users` and `predictions` tables. A new user (with username `API_NEW_USER_NAME` and password `API_NEW_USER_PASSWORD`) will be created and added to the users table.
+This will do the following
+-   Create an empty containerized postgress database using the five Postgres credentials `HOSTNAME`, `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` and `POSTGRES_PORT`
 
+-   Next, create empty `users` and `predictions` tables or uses existing `users` and `predictions` tables
+
+-   A new admin user (with username `API_NEW_USER_NAME` and password `API_NEW_USER_PASSWORD`) will be created and added to the users table
+
+-   Two new users `user_one` and `user_two` will be added to the `users` table
+
+-   Predictions from `api_verify/dummy_url_inputs.json` will be added to the `predictions` table
+
+Follow the steps below
 1.  Export environment variables (if not already done)
     ```bash
+    # Gunicorn
+    export HOST=0.0.0.0
+    export API_PORT=8050
     # PostgreSQL
     export HOSTNAME=localhost
     export POSTGRES_DB=test_db
@@ -231,7 +244,7 @@ This creates an empty containerized postgress database, and creates empty `users
             export HOST=0.0.0.0
             export API_PORT=8050
             # FastAPI User
-            export API_NEW_USER_NAME=<username_for_new_user>
+            export API_NEW_USER_NAME=admin
             export API_NEW_USER_PASSWORD=<password_for_new_user>
             ```
         -   Verify
@@ -241,7 +254,7 @@ This creates an empty containerized postgress database, and creates empty `users
     -   Without using containers<sup>[1](#myfootnote1)</sup>
         -   Start containerized postgres database
             ```bash
-            make start-container-db
+            make start-container-db alembic-migrate
             ```
             <a name="myfootnote1">1</a>: container will be used for database, not for API
 
@@ -257,7 +270,7 @@ This creates an empty containerized postgress database, and creates empty `users
                 export HOST=0.0.0.0
                 export API_PORT=8050
                 # FastAPI User
-                export API_NEW_USER_NAME=<username_for_new_user>
+                export API_NEW_USER_NAME=admin
                 export API_NEW_USER_PASSWORD=<password_for_new_user>
                 ```
             -   Verify
@@ -292,8 +305,23 @@ This creates an empty containerized postgress database, and creates empty `users
     make stop-containers-clean
     ```
 
+## [Notes](#notes)
+1.  As mentioned [above](#verification), two database tables are created - `users` and `predictions`. Each entry in the `predictions` table is associated with a unique URL. Duplicate predictions (i.e. duplicate URLs) are not allowed in the `predictions` table. Currently, the intended usage of the API created by this project is as follows
+
+    -   a new user must register by sending a `POST` request to an unauthenticated `/create_users` route with their `username` and (plain text) `password`
+
+    -   next, the registered user must send a `POST` request to an unauthenticated `/token` route, using the same registration credentials (`username` and `password`)
+        -   this will generate a JWT and return a dictionary of headers that is compatible with the API's authenticated routes
+
+    -   using the headers dictionary, all registered users can send
+        -   `POST` requests to create `prediction` entries in the `predictions` table
+        -   `GET` requests to view one or more `prediction` entries from the `predictions` table
+        -   `GET` requests to view one (`/user/{user_id}`) or more (`/users`) `user`s from the `users` table
+
+    This usage is demonstrated in `/api_verify`.
+
 ## [Deployment](#deployment)
-Currently, only deployment to Heroku is supported - see the instructions [here](fastapi-minimal-ml/blob/main/docs/heroku.md).
+Currently, only deployment to Heroku is supported - see step-by-step instructions [here](fastapi-minimal-ml/blob/main/docs/heroku.md).
 
 ## [Contributions](#contributions)
 [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=edesz&theme=blue-green&repo=fastapi-minimal-ml)](https://github.com/edesz/fastapi-minimal-ml)

@@ -37,7 +37,15 @@ if __name__ == "__main__":
     # Create user and retrieve headers with JWT to use in authenticated routes
     API_USER_NAME = os.getenv("API_NEW_USER_NAME")
     API_USER_PASSWORD = os.getenv("API_NEW_USER_PASSWORD")
-    headers = adl.create_user(API_USER_NAME, API_USER_PASSWORD, HOST_PORT)
+    headers, is_admin = adl.create_user(
+        API_USER_NAME, API_USER_PASSWORD, HOST_PORT
+    )
+
+    # Create multiple non-admin users and retrieve headers for last user created
+    new_users = ["user_one", "user_two"]
+    new_passwords = ["myfirstsecret", "mysecondsecret"]
+    headers, is_admin = adl.create_user(new_users, new_passwords, HOST_PORT)
+    API_USER_NAME = os.getenv("API_NEW_USER_NAME")
 
     # Add predictions to predictions table
     url = urljoin(f"{HOST_PORT}/api/v1/topics/", "create").lower()
@@ -81,25 +89,44 @@ if __name__ == "__main__":
     assert list(json.loads(r.text)) == ["username", "password_hash"]
 
     # Verify response of authenticated /auths/user/{user_id} GET endpoint
-    # - assumes a single user exists in the users table
-    user_id = 1
+    # - assumes user_id=1 in the users table is an admin
+    user_id = len(new_users) + 1
     url = urljoin(f"{HOST_PORT}/api/v1/auths/user/", str(user_id)).lower()
     r = requests.get(url, headers=headers)
-    assert r.status_code == 200
     r_text = json.loads(r.text)
+    assert r.status_code == 200
     assert list(r_text) == ["msg", "current_user"]
     assert list(r_text["msg"]) == ["id", "username", "password_hash"]
     assert r_text["msg"]["username"] == API_USER_NAME
     assert r_text["current_user"] == API_USER_NAME
 
+    user_id = 1
+    url = urljoin(f"{HOST_PORT}/api/v1/auths/user/", str(user_id)).lower()
+    r = requests.get(url, headers=headers)
+    r_text = json.loads(r.text)
+    assert r.status_code == 401
+    new_username = API_USER_NAME
+    assert r_text["detail"] == f"{new_username} is not the admin. No access."
+
     # Verify response of authenticated /users GET endpoint
     url = urljoin(f"{HOST_PORT}/api/v1/auths/", "users").lower()
     r = requests.get(url, headers=headers)
     r_text = json.loads(r.text)
-    assert r.status_code == 200
-    assert list(r_text) == ["msg", "current_user"]
-    assert list(r_text["msg"][0].keys()) == ["id", "username", "password_hash"]
-    assert len(r_text["msg"]) == user_id
-    assert r_text["current_user"] == API_USER_NAME
+    if is_admin:
+        assert r.status_code == 200
+        assert list(r_text) == ["msg", "current_user"]
+        assert list(r_text["msg"][0].keys()) == [
+            "id",
+            "username",
+            "password_hash",
+        ]
+        assert len(r_text["msg"]) == len(new_users)
+        assert r_text["current_user"] == API_USER_NAME
+    else:
+        assert r.status_code == 401
+        new_username = API_USER_NAME
+        assert (
+            r_text["detail"] == f"{new_username} is not the admin. No access."
+        )
 
     logger.info("Completed verification")
