@@ -142,10 +142,12 @@ Not included
     -   Without using containers
 
         -   Initiate `SIGINT` (Press <kbd>CTRL</kbd>+<kbd>C</kbd>)
+
         -   Clean up python artifacts in `fastapi-minimal-ml/api`
             ```bash
             make clean-py
             ```
+
         -   (Optional) Shutdown containerized postgres database
             ```bash
             make stop-container-db
@@ -213,13 +215,9 @@ Verify successful response of calling **all** API routes when queried with corre
 
 This will do the following
 -   Create an empty containerized postgress database using the five Postgres credentials `HOSTNAME`, `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` and `POSTGRES_PORT`
-
 -   Next, create empty `users` and `predictions` tables or uses existing `users` and `predictions` tables
-
 -   A new admin user (with username `API_NEW_USER_NAME` and password `API_NEW_USER_PASSWORD`) will be created and added to the users table
-
 -   Two new users `user_one` and `user_two` will be added to the `users` table
-
 -   Predictions from `api_verify/dummy_url_inputs.json` will be added to the `predictions` table
 
 Follow the steps below
@@ -284,10 +282,10 @@ Follow the steps below
                 make clean-py-verify
                 ```
 
-3. (If not using containers) Stop API server
-   -   Initiate `SIGINT` (Press <kbd>CTRL</kbd>+<kbd>C</kbd>)
+3.  (If not using containers) Stop API server
+    -   Initiate `SIGINT` (Press <kbd>CTRL</kbd>+<kbd>C</kbd>)
 
-4. Clean up python artifacts in `fastapi-minimal-ml/api`
+4.  Clean up python artifacts in `fastapi-minimal-ml/api`
     ```bash
     make clean-py
     ```
