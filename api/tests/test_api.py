@@ -60,22 +60,35 @@ def test_get_my_user(test_app, user_auth_headers):
 
 @pytest.mark.happy
 def test_get_users(test_app, user_auth_headers, get_all_users):
-    """Test getting all user creds from users table."""
+    """Test getting all user creds from users table, by non-admin user."""
     # Verify input with authentication returns all users in users table
+    # - handles case where current user is not an admin OR is an admin
     r = test_app.get("/api/v1/auths/users", headers=user_auth_headers)
     r_text = json.loads(r.text)
-    assert r.status_code == 200
-    assert r.url == "http://testserver/api/v1/auths/users"
-    assert list(r_text) == ["msg", "current_user"]
-    assert list(r_text["msg"][0].keys()) == ["id", "username", "password_hash"]
-    assert len(r_text["msg"]) == 1
-    assert r_text["current_user"] == API_USER_NAME
+    if API_USER_NAME == "admin":
+        assert r.status_code == 200
+        assert r.url == "http://testserver/api/v1/auths/users"
+        assert list(r_text) == ["msg", "current_user"]
+        assert list(r_text["msg"][0].keys()) == [
+            "id",
+            "username",
+            "password_hash",
+        ]
+        assert len(r_text["msg"]) == 1
+        assert r_text["current_user"] == API_USER_NAME
+    else:
+        assert r.status_code == 401
+        new_username = API_USER_NAME
+        assert (
+            r_text["detail"] == f"{new_username} is not the admin. No access."
+        )
 
 
 @pytest.mark.happy
 def test_get_user(test_app, user_auth_headers, get_single_user_by_username):
-    """Test getting single user creds from users table, by user id."""
+    """Test return single non-admin user cred from users table, by user id."""
     # Verify input with authentication returns single user from users table
+    # - assumes (current user) user_id=1 in the users table is not an admin
     user_id = 1
     endpoint = f"/api/v1/auths/user/{user_id}"
     r = test_app.get(endpoint, headers=user_auth_headers)

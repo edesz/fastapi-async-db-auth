@@ -169,6 +169,8 @@ Not included
 ### [Testing](#testing)
 1.  Export environment variables (if not already done)
     ```bash
+    # Gunicorn
+    export API_PORT=8050  # if excluded here, then docker-compose web ports errors out
     # PostgreSQL
     export HOSTNAME=localhost
     export POSTGRES_PORT=5434
