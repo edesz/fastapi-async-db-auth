@@ -1,0 +1,12 @@
+.coveragerc
+.gitignore
+tests/
+conftest.py
+Dockerfile
+Dockerfile.heroku
+dummy_input_data.json
+Procfile
+pytest.ini
+requirements_test.txt
+runtime.txt
+user_data.json

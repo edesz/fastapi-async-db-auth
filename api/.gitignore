@@ -1,0 +1,9 @@
+.coveragerc
+.dockerignore
+tests/
+conftest.py
+Dockerfile
+dummy_input_data.json
+pytest.ini
+requirements_test.txt
+user_data.json

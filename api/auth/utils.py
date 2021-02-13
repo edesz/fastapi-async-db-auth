@@ -38,6 +38,16 @@ def user_pydantic_from_sqlalchemy(db_user):
     return db_user_pydantic
 
 
+def check_for_admin_user(user: DBUser_Pydantic):
+    current_user_name = user.username
+    if not current_user_name == "admin":
+        raise HTTPException(
+            status_code=401,
+            detail=f"{current_user_name} is not the admin. No access.",
+        )
+    return current_user_name
+
+
 async def authenticate_user(username: str, password: str):
     """Authenticate user's password against password in users table."""
     user = await DBUser.get_one_by_username(username=username)

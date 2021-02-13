@@ -22,7 +22,6 @@
   <a href="https://www.codacy.com/gh/edesz/fastapi-minimal-ml/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=edesz/fastapi-minimal-ml&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/cc6ccfd808304591a67917cbb48e4183"/></a>
   <a href="https://www.codefactor.io/repository/github/edesz/fastapi-minimal-ml/overview/main"><img src="https://www.codefactor.io/repository/github/edesz/fastapi-minimal-ml/badge/main" alt="CodeFactor" /></a>
   <a href="https://codeclimate.com/github/edesz/fastapi-minimal-ml/maintainability"><img src="https://api.codeclimate.com/v1/badges/a754c5464e26da508958/maintainability" /></a>
-  <a href="https://wakatime.com/badge/github/edesz/fastapi-minimal-ml.svg"><img alt="wakatime" src="https://wakatime.com/badge/github/edesz/fastapi-minimal-ml.svg"/></a>
 </div>
 
 <div align="center">
@@ -43,12 +42,14 @@
 ## [Table of Contents](#table-of-contents)
 -   [About](#about)
 
+-   [Features](#features)
+
 -   [Usage](#usage)
     -   [Local Development](#local-development)
     -   [Testing](#testing)
     -   [Verification](#verification)
 
--   [Features](#features)
+-   [Deployment](#deployment)
 
 -   [Contributions](#contributions)
 
@@ -57,7 +58,7 @@
 -   [Future Improvements](#future-improvements)
 
 ## [About](#about)
-This is a **minimal** [FastAPI](https://fastapi.tiangolo.com/) project, with the python -based web-framework `fastapi` and external dependencies to facilitate use of a postgres database (controlled by `sqlalchemy` and requiring user authentication) and unit tests (mocking database access, when required) to start using FastAPI with
+This is a **minimal** [FastAPI](https://fastapi.tiangolo.com/) project, with the python-based web-framework `fastapi` and external dependencies to facilitate use of a postgres database (controlled by `sqlalchemy` and requiring user authentication) and unit tests (mocking database access, when required) to start using FastAPI with
 
 -   an asynchronous database (only create and read) operations controlled by `sqlalchemy`, per [FastAPI async database docs](https://fastapi.tiangolo.com/advanced/async-sql-databases/)
 -   alembic migrations, per Alembic docs ([configure](https://alembic.sqlalchemy.org/en/latest/tutorial.html), [auto-generate](https://alembic.sqlalchemy.org/en/latest/autogenerate.html#auto-generating-migrations))
@@ -79,7 +80,7 @@ Included
 -   user-authentication with Oauth2 using password, bearer and JWT required in order to post new records (predictions) to the database table
     -   a separate table is created to keep track of registered users
 
--   `Makefile` with tasks to reproducibly run necessary tasks
+-   `Makefile` with [targets](https://www.gnu.org/software/make/manual/html_node/Phony-Targets.html#Phony-Targets) to reproducibly run necessary shell commands
     -   alembic migrations
     -   happypath unit tests, and one unhappypath test
     -   use `gunicorn` to manage `uvicorn` for a mixture of asynchronous Python and parallelism, when instantiating the API
@@ -91,6 +92,8 @@ Included
     -   **all python code runs through a `tox` environment**, to ensure reproducibility
 
 -   demo (basic) HTML content (templates, static files)
+
+-   including `docker-compose` to streamline interaction between the database and the front-end
 
 Not included
 -   support for [deployment of the API](https://fastapi.tiangolo.com/deployment/)
@@ -109,113 +112,219 @@ Not included
 
 2.  Export environment variables
     ```bash
-    # Gunicorn (not needed for tests; optionally needed for api, verify)
+    # Gunicorn
     export HOST=0.0.0.0
     export API_PORT=8050
-    # PostgreSQL (needed for api, tests, verify)
+    # PostgreSQL (needed for api)
     export HOSTNAME=localhost
-    export POSTGRES_PORT=5434  # should match line 14 in docker-compose.yml
     export POSTGRES_DB=test_db
     export POSTGRES_USER=postgres
     export POSTGRES_PASSWORD=postgres
-    # FastAPI User Authentication (needed for api, tests, verify)
-    export JWT_SECRET=<jwt_secret>
-    # FastAPI User (needed for tests to verify current_user/.msg.username fields from response)
-    export API_USER_NAME=<username_for_user_in_mocked_database>
-    export API_USER_PASSWORD=<password_for_user_in_mocked_database>
-    ```
-
-3.  Run API locally
-    ```bash
-    make api
-    ```
-
-    To stop server, press <kbd>CTRL</kbd>+<kbd>C</kbd>.
-
-4.  Clean up python artifacts in `fastapi-minimal-ml/api`
-    ```bash
-    make clean-py
-    ```
-
-5.  (Optional) Shutdown containerized postgres database
-    ```bash
-    make stop-container-db
-    ```
-
-### [Testing](#testing)
-1.  Export environment variables (if not already done)
-    ```bash
-    # PostgreSQL
-    export HOSTNAME=localhost
-    export POSTGRES_PORT=5434  # should match line 14 in docker-compose.yml
-    export POSTGRES_DB=test_db
-    export POSTGRES_USER=postgres
-    export POSTGRES_PASSWORD=postgres
+    export POSTGRES_PORT=5434
     # FastAPI User Authentication
     export JWT_SECRET=<jwt_secret>
     ```
 
-2.  Run tests and show reports (test summary and code coverage)
-    ```bash
-    make tests
-    ```
+3.  Run API locally
+    -   Without using containers<sup>[1](#myfootnote1)</sup>
+        ```bash
+        make start-container-db alembic-migrate api
+        ```
+    
+        <a name="myfootnote1">1</a>: container will be used for database, not for API
 
-    Note that this will first create an empty containerized postgress database before running tests. The container will mount the [path to postgres data files](https://www.postgresql.org/docs/current/storage-file-layout.html) (`/var/lib/pgsql/data`) inside the container to `${PWD}/db_data` on the host (this path on the host will be created if necessary). After tests are completed
+    -   Using containers
+        ```bash
+        make start-containers
+        ```
 
-    -   the container is shut down and the postgres image is deleted
-    -   (when running tess locally) a test summary and code coverage report are opened in separate browser tabs, for inspection
+4.  Stop API server
+    -   Without using containers
 
-3.  Clean up python artifacts in `fastapi-minimal-ml/api`, and clean up testing artifacts, summary reports and coverage reports in `fastapi-minimal-ml/tests`
-    ```bash
-    make clean-tests
-    ```
+        -   Initiate `SIGINT` (Press <kbd>CTRL</kbd>+<kbd>C</kbd>)
+        -   Clean up python artifacts in `fastapi-minimal-ml/api`
+            ```bash
+            make clean-py
+            ```
+        -   (Optional) Shutdown containerized postgres database
+            ```bash
+            make stop-container-db
+            ```
+        -   (Optional) Remove any folders mounted as database container volumes
+            ```bash
+            make delete-db-container-volume
+            ```
 
-### [Verification](#verification)
-Verify successful response of calling **all** API routes when queried with correct input API parameters and user-authentication headers, using the Python [`requests`](https://pypi.org/project/requests/) package.
+    -   Using containers
+        ```bash
+        make stop-containers-clean
+        ```
 
-That this requires that a postgress database (configured using `fastapi-minimal-ml/docker-compose.yml`) is running on port `POSTGRES_PORT` (specified from line 14 in `fastapi-minimal-ml/docker-compose.yml`) and has a single user (having username `API_USER_NAME`) in the users table. A new user (with username `API_NEW_USER_NAME`) will be added to the users table.
+        This will
 
-1.  If, for example, eight users already exist in the postgres database, then change Line 82 in [`api_verify/api_handle_invalid_data.py`](https://github.com/edesz/fastapi-minimal-ml/blob/main/api_verify/api_handle_invalid_data.py) from 1 to 9.
+        -   shutdown the containerized postgres database
+        -   delete the database container volume
+        -   remove Python artifacts
 
-2.  Export environment variables (if not already done)
+### [Testing](#testing)
+1.  Export environment variables (if not already done)
     ```bash
     # Gunicorn
-    export HOST=0.0.0.0
-    export API_PORT=8050
+    export API_PORT=8050  # if excluded here, then docker-compose web ports errors out
     # PostgreSQL
     export HOSTNAME=localhost
-    export POSTGRES_PORT=5434  # should match line 14 in docker-compose.yml
+    export POSTGRES_PORT=5434
     export POSTGRES_DB=test_db
     export POSTGRES_USER=postgres
     export POSTGRES_PASSWORD=postgres
     # FastAPI User Authentication
     export JWT_SECRET=<jwt_secret>
     # FastAPI User
-    export API_NEW_USER_NAME=<username_for_new_user>
-    export API_NEW_USER_PASSWORD=<password_for_new_user>
+    export API_NEW_USER_NAME=<username_for_user_in_mocked_database>
+    export API_NEW_USER_PASSWORD=<password_for_user_in_mocked_database>
     ```
 
-3.  Verify successful responses
+2.  Run tests using a containerized Postgres database and show reports (test summary and code coverage)
     ```bash
-    make verify
+    make tests
     ```
 
-    Note that after verification, this will leave the database running.
+    Note that, before running tests, the above command will first create an empty containerized postgress database. No tables will be created in this database. The container will mount the [path to postgres data files](https://www.postgresql.org/docs/current/storage-file-layout.html) (`/var/lib/pgsql/data`) inside the container to `${PWD}/db_data` on the host (on the host, this path will be created if necessary). After tests are completed
 
-4.  Clean up python artifacts in `fastapi-minimal-ml/api_verify`
+    -   the container is automatically shut down and the postgres image is deleted
+    -   (when running tests locally) a test summary and code coverage report are opened in separate browser tabs
+
+3.  Clean up
+    -   python artifacts in `fastapi-minimal-ml/api`
+    -   testing artifacts, summary reports and coverage reports in `fastapi-minimal-ml/tests`
+
+    by running
     ```bash
-    make clean-py-verify
+    make clean-tests
     ```
 
-5.  (Optional) Shutdown containerized postgres database
+4.  Remove any local folders mounted as database container volumes
+    ```bash
+    make delete-db-container-volume
+    ```
+
+### [Verification](#verification)
+Verify successful response of calling **all** API routes when queried with correct input API parameters and user-authentication headers, using the Python [`requests`](https://pypi.org/project/requests/) package. This cannot be used with an existing database.
+
+This will do the following
+-   Create an empty containerized postgress database using the five Postgres credentials `HOSTNAME`, `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` and `POSTGRES_PORT`
+
+-   Next, create empty `users` and `predictions` tables or uses existing `users` and `predictions` tables
+
+-   A new admin user (with username `API_NEW_USER_NAME` and password `API_NEW_USER_PASSWORD`) will be created and added to the users table
+
+-   Two new users `user_one` and `user_two` will be added to the `users` table
+
+-   Predictions from `api_verify/dummy_url_inputs.json` will be added to the `predictions` table
+
+Follow the steps below
+1.  Export environment variables (if not already done)
+    ```bash
+    # Gunicorn
+    export HOST=0.0.0.0
+    export API_PORT=8050
+    # PostgreSQL
+    export HOSTNAME=localhost
+    export POSTGRES_DB=test_db
+    export POSTGRES_USER=postgres
+    export POSTGRES_PASSWORD=postgres
+    export POSTGRES_PORT=5434
+    # FastAPI User Authentication
+    export JWT_SECRET=<jwt_secret>
+    ```
+
+2.  Verify successful API responses locally
+    -   Using containers
+        -   Export environment variables
+            ```bash
+            # Gunicorn
+            export HOST=0.0.0.0
+            export API_PORT=8050
+            # FastAPI User
+            export API_NEW_USER_NAME=admin
+            export API_NEW_USER_PASSWORD=<password_for_new_user>
+            ```
+        -   Verify
+            ```bash
+            make start-containers-verify
+            ```
+    -   Without using containers<sup>[1](#myfootnote1)</sup>
+        -   Start containerized postgres database
+            ```bash
+            make start-container-db alembic-migrate
+            ```
+            <a name="myfootnote1">1</a>: container will be used for database, not for API
+
+        -   Start API
+            ```bash
+            make api
+            ```
+
+        -   In a separate shell
+            -   Export environment variables
+                ```bash
+                # Gunicorn
+                export HOST=0.0.0.0
+                export API_PORT=8050
+                # FastAPI User
+                export API_NEW_USER_NAME=admin
+                export API_NEW_USER_PASSWORD=<password_for_new_user>
+                ```
+            -   Verify
+                ```bash
+                make verify
+                ```
+            -   Clean up python artifacts in `fastapi-minimal-ml/api_verify`
+                ```bash
+                make clean-py-verify
+                ```
+
+3. (If not using containers) Stop API server
+   -   Initiate `SIGINT` (Press <kbd>CTRL</kbd>+<kbd>C</kbd>)
+
+4. Clean up python artifacts in `fastapi-minimal-ml/api`
+    ```bash
+    make clean-py
+    ```
+
+5.  (If not using containers) Shutdown containerized postgres database
     ```bash
     make stop-container-db
     ```
 
-6.  (Optional) Change permissions of local directory mounted as docker-volume
+6.  (If not using containers) Remove any folders mounted as database container volumes
     ```bash
-    sudo chown -R $USER:$USER ${PWD}/db_data
+    make delete-db-container-volume
     ```
+
+7.  (If using containers) Shutdown containerized postgres database, Delete database container volume and Remove Python artifacts
+    ```bash
+    make stop-containers-clean
+    ```
+
+## [Notes](#notes)
+1.  As mentioned [above](#verification), two database tables are created - `users` and `predictions`. Each entry in the `predictions` table is associated with a unique URL. Duplicate predictions (i.e. duplicate URLs) are not allowed in the `predictions` table. Currently, the intended usage of the API created by this project is as follows
+
+    -   a new user must register by sending a `POST` request to an unauthenticated `/create_users` route with their `username` and (plain text) `password`
+        -   a single admin user (with a `username` of `admin`) can be created
+
+    -   next, the registered user must send a `POST` request to an unauthenticated `/token` route, using the same registration credentials (`username` and `password`)
+        -   this will generate a JWT and return a dictionary of headers that is compatible with the API's authenticated routes
+
+    -   using the headers dictionary, registered users can send
+        -   `POST` requests to create `prediction` entries in the `predictions` table
+        -   (for admin user only) `GET` requests to view one or more `prediction` entries from the `predictions` table
+        -   (for admin user only) `GET` requests to view one (`/user/{user_id}`) or more (`/users`) `user`s from the `users` table
+
+    This usage is demonstrated in `/api_verify`.
+
+## [Deployment](#deployment)
+Currently, only deployment to Heroku is supported - see step-by-step instructions [here](fastapi-minimal-ml/blob/main/docs/heroku.md).
 
 ## [Contributions](#contributions)
 [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=edesz&theme=blue-green&repo=fastapi-minimal-ml)](https://github.com/edesz/fastapi-minimal-ml)
@@ -260,16 +369,18 @@ Other sources that were used are documentation for the following Python packages
 -   [Coverage.py](https://coverage.readthedocs.io/en/coverage-5.4/index.html)
 -   [Tox](https://tox.readthedocs.io/en/latest/index.html)
 
-as well as [documentation for Python projects using Github Actions](https://docs.github.com/en/actions/guides/building-and-testing-python) and [CodeCov's Github Action](https://github.com/codecov/codecov-action#codecov-github-action).
+as well as [Github Actions](https://github.com/features/actions) documentation for
+-   [Python projects](https://docs.github.com/en/actions/guides/building-and-testing-python)
+-   [CodeCov](https://github.com/codecov/codecov-action#codecov-github-action)
+
+and [`Makefile`](https://www.gnu.org/software/make/manual/make.html#Introduction)s from two open-source projects ([1](https://github.com/drivendata/cookiecutter-data-science), [2](https://github.com/hackebrot/pytest-cookies)).
 
 ## [Future Improvements](#future-improvements)
-A preliminary list of functionality to be implemented is shown below
+A preliminary list of features planned to be implemented is shown below
 
 1.  Add *Update* and *Delete* components of [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) to `api/app/topics/routes.py`
 
 2.  Add [ReadTheDocs](https://readthedocs.org/) documentation
 
-3.  Explore feasibility of including `docker-compose` to streamline interaction between the database and the front-end
-
-4.  Convert this repository into a [Python `cookiecutter`](https://cookiecutterreadthedocs.io/en/latest/), to allow for more customized re-use when starting new projects
-    -   offer basic deployment support for Azure, Heroku and other platforms, via GitHub Actions workflow, based on user specification in `cookiecutter` input
+3.  Convert this repository into a [Python `cookiecutter`](https://cookiecutterreadthedocs.io/en/latest/), to allow for more customized re-use when starting new projects
+    -   add to existing deployment support ([Heroku](#heroku-deployment)) for other cloud providers, based on user specification in `cookiecutter` input

@@ -1,10 +1,28 @@
 name: CI
 
-on: [push, pull_request]
+on: 
+  push:
+    branches:    
+      - main 
+  pull_request:
+    branches:
+      - main
+
+env:
+  API_PORT: 8050  # if not in the tests job, then docker-compose web ports errors out
+  HOSTNAME: localhost
+  POSTGRES_DB: test_db
+  POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+  POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+  POSTGRES_PORT: 5434
+  JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
 jobs:
-  commit:
+  tests:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v1
@@ -18,14 +36,8 @@ jobs:
       - name: Run tests and Show test summary
         run: make tests
         env:
-          HOSTNAME: localhost
-          POSTGRES_PORT: 5434
-          POSTGRES_DB: test_db
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          JWT_SECRET: myjwtsecret
-          API_USER_NAME: ${{ secrets.API_USER_NAME }}
-          API_USER_PASSWORD: ${{ secrets.API_USER_PASSWORD }}
+          API_NEW_USER_NAME: ${{ secrets.API_NEW_USER_NAME }}
+          API_NEW_USER_PASSWORD: ${{ secrets.API_NEW_USER_PASSWORD }}
           SHOW_COV_HTML: False
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
@@ -41,5 +53,29 @@ jobs:
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           coverage-reports: ./api/tests/test-logs/coverage.xml
-      - name: clean test artifacts
+      - name: Clean test artifacts
         run: make clean-tests
+  build:
+    needs: tests
+    runs-on: ubuntu-latest
+    env:
+      HOST: 0.0.0.0
+      API_NEW_USER_NAME: ${{ secrets.API_NEW_USER_NAME }}
+      API_NEW_USER_PASSWORD: ${{ secrets.API_NEW_USER_PASSWORD }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+        with:
+          python-version: '3.8'
+          architecture: 'x64'
+      - name: Upgrade python-pip
+        run: python -m pip install --upgrade pip
+      - name: Install dependencies
+        run: pip install tox
+      - name: Run containerized API with verification
+        run: make start-containers-verify
+      - name: Stop containers
+        run: make stop-containers
