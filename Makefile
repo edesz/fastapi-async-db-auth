@@ -171,11 +171,16 @@ heroku-set-env-vars:
 	@heroku config:set HOST=$(HOST) --app $(HD_APP_NAME)
 .PHONY: heroku-set-env-vars
 
+## Heroku stream logs
+heroku-logs:
+	@echo "+ $@"
+	@heroku logs --tail
+.PHONY: heroku-logs
+
 ## Deploy app from sub-directory to Heroku
 heroku-deploy-sub-dir:
 	@echo "+ $@"
 	@git subtree push --prefix api heroku main
-	@heroku logs --tail
 .PHONY: heroku-deploy-sub-dir
 
 ## (Heroku Docker) Set app to Heroku's container stack
@@ -188,16 +193,19 @@ heroku-stack-set-container:
 heroku-git-push:
 	@echo "+ $@"
 	@git push heroku main
-	@heroku logs --tail
 .PHONY: heroku-git-push
+
+## Heroku baseline setup for containerized and non-containerized apps
+.PHONY: heroku-setup
+heroku-setup: heroku-create heroku-add-remote heroku-create-postgres-add-on heroku-set-env-vars
 
 ## Heroku workflow to deploy app
 .PHONY: heroku-run
-heroku-run: heroku-create heroku-add-remote heroku-create-postgres-add-on heroku-set-env-vars heroku-deploy-sub-dir
+heroku-run: heroku-setup heroku-deploy-sub-dir heroku-logs
 
 ## (Heroku Docker) Heroku workflow to deploy containerized app
 .PHONY: heroku-docker-run
-heroku-docker-run: heroku-create heroku-add-remote heroku-create-postgres-add-on heroku-set-env-vars heroku-stack-set-container heroku-git-push
+heroku-docker-run: heroku-setup heroku-stack-set-container heroku-git-push heroku-logs
 
 ## Detach Heroku add-on
 heroku-detach-postgres-add-on:

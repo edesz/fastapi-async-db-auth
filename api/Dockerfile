@@ -1,4 +1,4 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8-slim
 
 ARG HOST_ARG=0.0.0.0
 ARG API_PORT_ARG=8050

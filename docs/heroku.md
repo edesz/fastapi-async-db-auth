@@ -115,6 +115,8 @@ Detailed
     ```
 
 ## [Delete Heroku App](#delete-heroku-app)
+In order to delete an app on Heroku, the procedure configured in this project is the same for an app running with or without a container
+
 **To delete an existing app on Heroku**
 1.  Detach PostgreSQL database Add-On from app
     ```bash
@@ -123,7 +125,7 @@ Detailed
 
 2.  Delete Heroku app
     ```bash
-    heroku-delete  # heroku apps:destroy --app $(HD_APP_NAME) --confirm $(HD_APP_NAME)
+    make heroku-delete  # heroku apps:destroy --app $(HD_APP_NAME) --confirm $(HD_APP_NAME)
     ``` 
 
 ## [Notes](#notes)
