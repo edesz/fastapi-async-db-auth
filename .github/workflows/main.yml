@@ -79,10 +79,12 @@ jobs:
       - name: Stop containers
         run: make stop-containers
   deploy:
+    needs: [coverage, build]
     runs-on: ubuntu-latest
     env:
       HOST: 0.0.0.0
       HD_APP_NAME: fastapi-minimal-ml
+      HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
     strategy:
       matrix:
         os: [ubuntu-latest]
