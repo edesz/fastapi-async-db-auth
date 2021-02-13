@@ -72,7 +72,7 @@ Quick Use
 -   `runtime.txt`
     -   specify Python version required
 
-**To deploy an app**
+To deploy an app, follow the steps below
 
 Quick Use
 1.  Run
@@ -117,7 +117,7 @@ Detailed
 ## [Delete Heroku App](#delete-heroku-app)
 In order to delete an app on Heroku, the procedure configured in this project is the same for an app running with or without a container
 
-**To delete an existing app on Heroku**
+To delete an existing app on Heroku, follow the steps below
 1.  Detach PostgreSQL database Add-On from app
     ```bash
     make heroku-detach-postgres-add-on  # heroku addons:destroy heroku-postgresql:hobby-dev --confirm $(HD_APP_NAME)
