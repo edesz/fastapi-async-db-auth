@@ -78,16 +78,3 @@ jobs:
         run: make start-containers-verify
       - name: Stop containers
         run: make stop-containers
-  deploy:
-    needs: [coverage, build]
-    runs-on: ubuntu-latest
-    env:
-      HOST: 0.0.0.0
-      HD_APP_NAME: fastapi-minimal-ml
-      HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-    steps:
-      - uses: actions/checkout@v2
-      - run: make heroku-setup heroku-stack-set-container heroku-git-push
