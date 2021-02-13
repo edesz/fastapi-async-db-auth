@@ -309,14 +309,15 @@ Follow the steps below
 1.  As mentioned [above](#verification), two database tables are created - `users` and `predictions`. Each entry in the `predictions` table is associated with a unique URL. Duplicate predictions (i.e. duplicate URLs) are not allowed in the `predictions` table. Currently, the intended usage of the API created by this project is as follows
 
     -   a new user must register by sending a `POST` request to an unauthenticated `/create_users` route with their `username` and (plain text) `password`
+        -   a single admin user (with a `username` of `admin`) can be created
 
     -   next, the registered user must send a `POST` request to an unauthenticated `/token` route, using the same registration credentials (`username` and `password`)
         -   this will generate a JWT and return a dictionary of headers that is compatible with the API's authenticated routes
 
-    -   using the headers dictionary, all registered users can send
+    -   using the headers dictionary, registered users can send
         -   `POST` requests to create `prediction` entries in the `predictions` table
-        -   `GET` requests to view one or more `prediction` entries from the `predictions` table
-        -   `GET` requests to view one (`/user/{user_id}`) or more (`/users`) `user`s from the `users` table
+        -   (for admin user only) `GET` requests to view one or more `prediction` entries from the `predictions` table
+        -   (for admin user only) `GET` requests to view one (`/user/{user_id}`) or more (`/users`) `user`s from the `users` table
 
     This usage is demonstrated in `/api_verify`.
 
