@@ -198,7 +198,7 @@ Not included
 
 3.  Clean up
     -   python artifacts in `fastapi-minimal-ml/api`
-    -   testing artifacts, summary reports and coverage reports in `fastapi-minimal-ml/tests`
+    -   testing artifacts, summary reports and coverage reports in `fastapi-minimal-ml/api/tests`
 
     by running
     ```bash
