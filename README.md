@@ -215,7 +215,7 @@ Verify successful response of calling **all** API routes when queried with corre
 
 This will do the following
 -   Create an empty containerized postgress database using the five Postgres credentials `HOSTNAME`, `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` and `POSTGRES_PORT`
--   Next, create empty `users` and `predictions` tables or uses existing `users` and `predictions` tables
+-   Next, create empty `users` and `predictions` tables
 -   A new admin user (with username `API_NEW_USER_NAME` and password `API_NEW_USER_PASSWORD`) will be created and added to the users table
 -   Two new users `user_one` and `user_two` will be added to the `users` table
 -   Predictions from `api_verify/dummy_url_inputs.json` will be added to the `predictions` table
@@ -306,13 +306,13 @@ Follow the steps below
     ```
 
 ## [Notes](#notes)
-1.  As mentioned [above](#verification), two database tables are created - `users` and `predictions`. Each entry in the `predictions` table is associated with a unique URL. Duplicate predictions (i.e. duplicate URLs) are not allowed in the `predictions` table. Currently, the intended usage of the API created by this project is as follows
+1.  As mentioned [above](#verification), two database tables are created - `users` and `predictions`. Each entry in the `predictions` table is associated with a unique URL. Duplicate predictions (i.e. duplicate URLs) are not allowed in the `predictions` table. After creating a FastAPI using this project, the intended usage of the API is as follows
 
     -   a new user must register by sending a `POST` request to an unauthenticated `/create_users` route with their `username` and (plain text) `password`
-        -   a single admin user (with a `username` of `admin`) can be created
+        -   a single admin user (with a `username` of `admin`, and any `password`) can be created
 
     -   next, the registered user must send a `POST` request to an unauthenticated `/token` route, using the same registration credentials (`username` and `password`)
-        -   this will generate a JWT and return a dictionary of headers that is compatible with the API's authenticated routes
+        -   this will generate a JWT and return a dictionary of headers that will enable querying the API's authenticated routes
 
     -   using the headers dictionary, registered users can send
         -   `POST` requests to create `prediction` entries in the `predictions` table
