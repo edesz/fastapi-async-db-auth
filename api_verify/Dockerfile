@@ -1,4 +1,4 @@
-FROM python:3.8.6-slim-buster
+FROM python:3.10.0a6-slim-buster
 
 ARG HOST_ARG=0.0.0.0
 ARG API_PORT_ARG=3080
