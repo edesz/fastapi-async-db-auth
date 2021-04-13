@@ -1,7 +1,7 @@
 sqlalchemy==1.4.7
 sqlalchemy-utils==0.37.0
 psycopg2_binary==2.8.6
-databases[postgres]==0.4.1
+databases[postgres]==0.4.3
 asyncpg==0.22.0
 alembic==1.5.8
 python-multipart==0.0.5
