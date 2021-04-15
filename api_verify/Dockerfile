@@ -10,7 +10,7 @@ WORKDIR /api_verify
 
 COPY . /api_verify
 
-RUN python -m pip install --upgrade pip \
+RUN python -m pip install --no-cache-dir --upgrade pip \
     && pip install -r requirements.txt \
     && find /usr/local/lib/python$PY_VERSION -name '*.c' -delete \
     && find /usr/local/lib/python$PY_VERSION -name '*.pxd' -delete \
