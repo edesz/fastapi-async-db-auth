@@ -7,7 +7,7 @@ alembic==1.5.8
 python-multipart==0.0.5
 bcrypt==3.2.0
 passlib==1.7.4
-pyjwt==2.0.1
+pyjwt==2.1.0
 aiofiles==0.6.0
 jinja2==2.11.3
 fastapi==0.63.0
