@@ -1,5 +1,5 @@
 sqlalchemy==1.4.13
-sqlalchemy-utils==0.37.1
+sqlalchemy-utils==0.37.2
 psycopg2_binary==2.8.6
 databases[postgres]==0.4.1
 asyncpg==0.22.0
