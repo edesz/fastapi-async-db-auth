@@ -1,4 +1,4 @@
-sqlalchemy==1.4.13
+sqlalchemy==1.4.14
 sqlalchemy-utils==0.37.2
 psycopg2_binary==2.8.6
 databases[postgres]==0.4.1
