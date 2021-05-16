@@ -9,8 +9,8 @@ bcrypt==3.2.0
 passlib==1.7.4
 pyjwt==2.1.0
 aiofiles==0.6.0
-jinja2==2.11.3
 fastapi==0.65.1
+jinja2==3.0.0
 uvicorn[standard]==0.13.4
 gunicorn==20.1.0
 pandas==1.2.4
