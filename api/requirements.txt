@@ -8,7 +8,7 @@ python-multipart==0.0.5
 bcrypt==3.2.0
 passlib==1.7.4
 pyjwt==2.1.0
-aiofiles==0.6.0
+aiofiles==0.7.0
 jinja2==3.0.0
 fastapi==0.65.0
 uvicorn[standard]==0.13.4
