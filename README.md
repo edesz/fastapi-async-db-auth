@@ -101,7 +101,7 @@ Not included
 -   any other sophisticated features; it is up to you to chose how to further implement your API beyond the basic database operations supported by this project
 
 -   features specific to ML use-cases, that might prevent use of this project in other types of applications
-    -   a few comments are added throughout the code in places where ML-specific components may be added but, since this is a minimal project, such code comments have been kept to a minimum and it is the user's responsibility to add these in as required
+    -   a few Python comments are added throughout the code in places where ML-specific components may be added but, since this is a minimal project, such code comments have been kept to a minimum across the project's codebase and it is the user's responsibility to add ML-specific features as they require
 
 ## [Usage](#usage)
 ### [Local Development](#local-development)
