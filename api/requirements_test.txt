@@ -4,4 +4,4 @@ pytest-emoji==0.2.0
 pytest-html==3.1.1
 pytest-md==0.2.0
 pytest-repeat==0.9.1
-requests==2.25.1
+requests==2.26.0
